@@ -1,0 +1,168 @@
+name: UNIFIED MODELING DRAWER - DEFAULT
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches:
+      - main
+      - develop
+      - delivery
+
+permissions: write-all
+
+jobs:
+
+  clear:
+    runs-on: ubuntu-latest
+    name: A job to delete old workflow runs
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Delete workflow runs
+      uses: MajorScruffy/delete-old-workflow-runs@v0.3.0
+      with:
+        repository: MGuillaumeF/unified-modeling-drawer
+        older-than-seconds: 86400   
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+
+      - name: Install dependencies
+        working-directory: ${{github.workspace}}
+        run: npm install
+
+      - name: Build App
+        working-directory: ${{github.workspace}}
+        run: npm run build:app
+
+      - name: Build Packaging
+        working-directory: ${{github.workspace}}
+        run: npm run el:package --windows
+         
+      - name: Archive Packages
+        uses: actions/upload-artifact@v2
+        with:
+          name: UMD-distribution-win
+          path: ${{github.workspace}}/dist
+        
+  sonarcloud-analyse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+
+      - name: Install icon dependencies
+        run: |
+          sudo add-apt-repository ppa:inkscape.dev/stable
+          sudo apt update  
+          sudo apt-get install -y imagemagick inkscape
+
+      - name: Create icon
+        working-directory: ${{github.workspace}}/packaging/resources/icon
+        run: |
+          dbus-run-session inkscape -w 16 -h 16 --export-type=png --export-filename=umd-16x16.png umd.svg
+          dbus-run-session inkscape -w 32 -h 32 --export-type=png --export-filename=umd-32x32.png umd.svg
+          dbus-run-session inkscape -w 48 -h 48 --export-type=png --export-filename=umd-48x48.png umd.svg
+          dbus-run-session inkscape -w 256 -h 256 --export-type=png --export-filename=umd-256x256.png umd.svg
+          # dbus-run-session inkscape --export-type=bmp umd.bmp umd.svg
+          convert umd-16x16.png umd-32x32.png umd-48x48.png umd-256x256.png umd.ico
+          cp umd-256x256.png ../icon.png
+          cp umd.ico ../icon.ico
+  
+      - name: Save icon changes
+        if: ${{ github.event_name == 'pull_request' && github.actor != 'dependabot[bot]' }}
+        working-directory: ${{github.workspace}}
+        run: |
+          git stash
+          git checkout ${{github.head_ref}}
+          git stash pop || echo "Nothing in stashed stack"
+          git config user.name "MGuillaumeF"
+          git config user.email "${{secrets.EMAIL}}"
+          git add packaging/resources
+          (git commit -m "[AUTO] update icon generated" && git push) || echo 'No modification to save'
+
+      - name: Install dependencies
+        working-directory: ${{github.workspace}}
+        run: npm install
+
+      - name: Build App
+        working-directory: ${{github.workspace}}
+        run: npm run build:app
+
+      - name: Build Packaging
+        working-directory: ${{github.workspace}}
+        run: npm run el:package --linux
+          
+      - name: Archive Packages
+        uses: actions/upload-artifact@v2
+        with:
+          name: UMD-distribution-linux
+          path: ${{github.workspace}}/dist
+        
+      # - name: Tests
+      #   working-directory: ${{github.workspace}}
+      #   run: npm test
+
+      - name: ESlint analyze json
+        working-directory: ${{github.workspace}}
+        run: npm run lint:eslint:json || echo FAILED
+
+      - name: ESlint analyze html
+        working-directory: ${{github.workspace}}
+        run: npm run lint:eslint || echo FAILED
+        
+      - name: Audit dependency
+        working-directory: ${{github.workspace}}
+        run: npm audit --json > ./dist/reports/audit-dependency-report.json || echo FAILED
+        
+      - name: Stylelint analyze
+        working-directory: ${{github.workspace}}
+        run: npm run lint:stylelint
+
+      - name: Convert Audit dependency report
+        working-directory: ${{github.workspace}}
+        run: ./node_modules/.bin/audiso --input-file=./dist/reports/audit-dependency-report.json --output-file ./dist/reports/audit-report.json
+
+      - name: Archive Analyses reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: UMD-Analyses-report
+          path: ${{github.workspace}}/dist/reports
+      # - name: Coverage reports
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: Coverage-report
+      #     path: ${{github.workspace}}/coverage
+
+      - name: Setup sonarqube
+        if: github.actor != 'dependabot[bot]'
+        uses: warchant/setup-sonar-scanner@v3
+
+      - name: Run SonarQube
+        if: github.actor != 'dependabot[bot]'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: sonar-scanner
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.host.url=https://sonarcloud.io/
+          -Dsonar.verbose=false
+
+      - name: SonarQube Quality Gate check
+        if: github.actor != 'dependabot[bot]'
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        # Force to fail step after specific time
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
