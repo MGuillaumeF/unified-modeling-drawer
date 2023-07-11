@@ -84,7 +84,7 @@
     "cypress-multi-reporters": "^1.6.3",
     "cypress-sonarqube-reporter": "^1.12.0",
     "dotenv": "^16.1.4",
-    "electron": "^10.1.5",
+    "electron": "^18.3.7",
     "electron-builder": "^22.9.1",
     "electron-installer-dmg": "^3.0.0",
     "electron-packager": "^15.1.0",
