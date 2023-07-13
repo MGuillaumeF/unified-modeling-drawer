@@ -50,7 +50,7 @@ jobs:
 
       - name: Convert Audit dependency report
         working-directory: ${{github.workspace}}
-        run: audiso --input-file=./dist/reports/audit-dependency-report.json --output-file ./dist/reports/audit-dependency-report-sonarqube.json
+        run: ./node_modules/.bin/audiso --input-file=./dist/reports/audit-dependency-report.json --output-file ./dist/reports/audit-dependency-report-sonarqube.json
 
       - name: Archive Analyses reports
         uses: actions/upload-artifact@v2
