@@ -22,7 +22,7 @@
     "ci:test": "start-server-and-test http://localhost:3000",
     "test": "npm run unit:test && npm run e2e:test",
     "webpack-stats": "webpack --define-process-env-node-env production --profile --json=stats.json",
-    "el:run": "electron public/electron.js",
+    "el:run": "electron src/packaging/electron.js",
     "el:package": "electron-builder"
   },
   "build": {
