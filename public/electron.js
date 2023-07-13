@@ -1,7 +1,9 @@
 // définition des paquets Node.js requires
-const { app, Tray, Menu, BrowserWindow } = require("electron");
+const { app, Tray, Menu, BrowserWindow, dialog } = require("electron");
+
 const path = require("path");
 const url = require("url");
+const fs = require("fs");
 
 let trayIconPath,
   iconPath = (trayIconPath = path.join(__dirname, "./icon.png"));
@@ -20,7 +22,7 @@ function createWindow() {
     height: 600,
     icon: iconPath,
     webPreferences: {
-      nodeIntegration: false
+      preload: path.join(__dirname, "preload.js")
     }
   });
   // Définition de la partie System Tray de l'application
@@ -70,7 +72,37 @@ function createWindow() {
       label: "Fichier",
       submenu: [
         { role: "new", label: "Nouveau Modèle", accelerator: "CmdOrCtrl+N" },
-        { role: "open", label: "Ouvrir Modèle", accelerator: "CmdOrCtrl+O" },
+        {
+          role: "open",
+          label: "Ouvrir Modèle",
+          accelerator: "CmdOrCtrl+O",
+          // this is the main bit hijack the click event
+          click() {
+            // construct the select file dialog
+            dialog
+              .showOpenDialog({
+                properties: ["openFile"]
+              })
+              .then(function (fileObj) {
+                // the fileObj has two props
+                if (!fileObj.canceled) {
+                  const xml2js = require("xml2js");
+
+                  let parser = new xml2js.Parser();
+                  const xmlContent = fs
+                    .readFileSync(fileObj.filePaths[0])
+                    .toString();
+                  parser.parseString(xmlContent, function (err, result) {
+                    win.webContents.send("file-open", result);
+                  });
+                }
+              })
+              // should always handle the error yourself, later Electron release might crash if you don't
+              .catch(function (err) {
+                console.error(err);
+              });
+          }
+        },
         { role: "save", label: "Sauvegarder", accelerator: "CmdOrCtrl+S" },
         {
           role: "saveas",

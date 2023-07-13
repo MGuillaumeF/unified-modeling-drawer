@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { render } from "react-dom";
 import { useTranslation } from "react-i18next";
 import Button from "./components/BasicButton/Button";
@@ -25,20 +25,22 @@ const changeLangBtnClick = (
   }
 };
 
-const attributes: {
-  name: string;
-  type: string;
-  visibility: "public" | "private" | "protected";
-}[] = [
-  { visibility: "private", name: "from", type: "string" },
-  { visibility: "private", name: "to", type: "string" },
-  { visibility: "private", name: "content", type: "string" }
-];
-
 const getOnDragOver: React.DragEventHandler<HTMLDivElement> = (e) =>
   e.preventDefault();
+
 const dropZoneStyle = { width: 500, height: 500, border: "1px solid red" };
+
 function App(): JSX.Element {
+  const [classObjectList, setClassObjectList] = useState<
+    Array<{
+      attributes: {
+        name: string;
+        type: string;
+        visibility: "public" | "private" | "protected";
+      }[];
+      name: string;
+    }>
+  >([]);
   const { i18n, t } = useTranslation();
 
   const onLanguageClick = useCallback(
@@ -47,11 +49,31 @@ function App(): JSX.Element {
     },
     [i18n]
   );
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  window.electronAPI.handleOpenFile((event, value) => {
+    console.log(event, value);
+    const classObjectList = value.model.class.map((item: any) => ({
+      name: item.$.name,
+      attributes: item.attribute.map((item: any) => ({
+        visibility: item.$.visibility,
+        name: item.$.name,
+        type: item.$.type
+      }))
+    }));
+    setClassObjectList(classObjectList);
+  });
 
   return (
     <div>
       <div style={dropZoneStyle} onDragOver={getOnDragOver}>
-        <ClassObject name="message" attributes={attributes} />
+        {classObjectList.map((item) => (
+          <ClassObject
+            key={item.name}
+            name={item.name}
+            attributes={item.attributes}
+          />
+        ))}
       </div>
       <div>
         <Button
