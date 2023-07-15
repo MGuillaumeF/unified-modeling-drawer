@@ -5,9 +5,9 @@
   "private": true,
   "main": "index.ts",
   "scripts": {
-    "build": "webpack --define-process-env-node-env production --progress --color --env PUBLIC_PATH=\"'.'\"",
+    "build:app": "cd app && webpack --define-process-env-node-env production --progress --color --env PUBLIC_PATH=\"'.'\"",
     "build:doc": "styleguidist build",
-    "start": "webpack serve --open --progress --color --define-process-env-node-env development",
+    "start": "cd app && webpack serve --open --progress --color --define-process-env-node-env development",
     "cy:build": "cd cypress && tsc --project tsconfig.json",
     "postcy:build": "mv cypress/cypress.config.js . || move cypress\\cypress.config.js .",
     "precy:open": "npm run cy:build",
@@ -22,7 +22,7 @@
     "ci:test": "start-server-and-test http://localhost:3000",
     "test": "npm run unit:test && npm run e2e:test",
     "webpack-stats": "webpack --define-process-env-node-env production --profile --json=stats.json",
-    "el:run": "electron src/packaging/electron.js",
+    "el:run": "electron build-packaging/electron.js",
     "el:package": "electron-builder"
   },
   "build": {
@@ -32,7 +32,7 @@
     "mac": {
       "category": "public.app.category.utilities"
     },
-    "files": ["build/**/*"],
+    "files": ["build-app/**/*"],
     "directories": {
       "buildResources": "assets"
     }
