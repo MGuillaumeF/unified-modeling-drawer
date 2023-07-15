@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "incremental": true,
-    "outDir": "./build/",
+    "outDir": "./build-app/",
     "sourceMap": true,
     "module": "esnext",
     "lib": ["DOM", "ESNext"],
