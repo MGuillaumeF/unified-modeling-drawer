@@ -27,7 +27,7 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}
-        run: npm run build
+        run: npm run build:app
 
       # - name: Tests
       #   working-directory: ${{github.workspace}}
