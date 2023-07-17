@@ -28,7 +28,7 @@ function updateLanguage(win : BrowserWindow, language : string) : void {
 
 function getMenuTemplate(win : BrowserWindow) : (Electron.MenuItemConstructorOptions | Electron.MenuItem)[] {
   const { t } = i18next;
-  const template : : (Electron.MenuItemConstructorOptions | Electron.MenuItem)[] =   [
+  const template : (Electron.MenuItemConstructorOptions | Electron.MenuItem)[] =   [
       {
         label: t("MENU.FILE.LABEL"),
         submenu: [
