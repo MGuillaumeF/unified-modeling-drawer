@@ -5,18 +5,7 @@ import fs from "fs";
 import { join as pathJoin } from "path";
 import url from "url";
 import xml2js from "xml2js";
-import { I18n } from "i18n";
-
-const i18n = new I18n({
-  locales: ['en', 'fr'],
-  directory: pathJoin(__dirname, './locales'),
-  register: global,
-  api: {
-    __: 't',
-    __n: 'tn'
-  },
-  defaultLocale: 'fr'
-})
+import i18next from "i18next";
 
 const ICON_EXT = process.platform === "win32" ? "ico" : "png";
 
@@ -240,22 +229,41 @@ function createWindow(): BrowserWindow {
   appIcon.setContextMenu(contextMenu);
   return win;
 }
-// méthode appelé lorsque l'application est prête
-app.on("ready", createWindow);
 
-// Quit when all windows are closed.
-app.on("window-all-closed", () => {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== "darwin") {
-    app.quit();
+i18next.init({
+  lng: 'fr',
+  resources: {
+    fr: {
+      translation: {
+        "key": "hello world"
+      }
+    },
+    en: {
+      translation: {
+        "key": "hello world"
+      }
+    }
   }
+}).then(function(t) {
+  // méthode appelé lorsque l'application est prête
+  app.on("ready", createWindow);
+
+  // Quit when all windows are closed.
+  app.on("window-all-closed", () => {
+    // On macOS it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
+    if (process.platform !== "darwin") {
+      app.quit();
+    }
+  });
+
+  app.on("activate", () => {
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (win === null) {
+      win = createWindow();
+    }
+  });
 });
 
-app.on("activate", () => {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (win === null) {
-    win = createWindow();
-  }
-});
+
