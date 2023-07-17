@@ -8,8 +8,11 @@ import xml2js from "xml2js";
 import i18next from "i18next";
 
 const ICON_EXT = process.platform === "win32" ? "ico" : "png";
+const RESOURCES_PATH = pathJoin(__dirname, "../resources");
+const ICON_PATH = pathJoin(RESOURCES_PATH, "icon");
+const LOCALES_PATH = pathJoin(RESOURCES_PATH, "locales");
 
-let trayIconPath = pathJoin(__dirname, `../resources/icon.${ICON_EXT}`);
+let trayIconPath = pathJoin(ICON_PATH, `icon.${ICON_EXT}`);
 let iconPath = trayIconPath;
 
 // Définition de la fenêtre Chromium
@@ -248,14 +251,10 @@ i18next.init({
   lng: 'fr',
   resources: {
     fr: {
-      translation: {
-        "key": "hello world"
-      }
+      translation: JSON.parse(fs.readFileSync(pathJoin(LOCALES_PATH, "fr", "translation.json").toString()))
     },
     en: {
-      translation: {
-        "key": "hello world"
-      }
+      translation: JSON.parse(fs.readFileSync(pathJoin(LOCALES_PATH, "en", "translation.json").toString()))
     }
   }
 }).then(function() {
