@@ -87,7 +87,7 @@ jobs:
 
       - name: Setup sonarqube
         if: github.actor != 'dependabot[bot]'
-        uses: warchant/setup-sonar-scanner@v3
+        uses: warchant/setup-sonar-scanner@v5
 
       - name: Run SonarQube
         if: github.actor != 'dependabot[bot]'
