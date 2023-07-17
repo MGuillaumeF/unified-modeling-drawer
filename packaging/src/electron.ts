@@ -5,6 +5,18 @@ import fs from "fs";
 import { join as pathJoin } from "path";
 import url from "url";
 import xml2js from "xml2js";
+import { I18n } from "i18n";
+
+const i18n = new I18n({
+  locales: ['en', 'fr'],
+  directory: pathJoin(__dirname, './locales'),
+  register: global,
+  api: {
+    __: 't',
+    __n: 'tn'
+  },
+  defaultLocale: 'fr'
+})
 
 const ICON_EXT = process.platform === "win32" ? "ico" : "png";
 
