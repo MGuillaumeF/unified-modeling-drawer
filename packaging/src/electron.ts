@@ -251,10 +251,10 @@ i18next.init({
   lng: 'fr',
   resources: {
     fr: {
-      translation: JSON.parse(fs.readFileSync(pathJoin(LOCALES_PATH, "fr", "translation.json").toString()))
+      translation: JSON.parse(fs.readFileSync(pathJoin(LOCALES_PATH, "fr", "translation.json")).toString())
     },
     en: {
-      translation: JSON.parse(fs.readFileSync(pathJoin(LOCALES_PATH, "en", "translation.json").toString()))
+      translation: JSON.parse(fs.readFileSync(pathJoin(LOCALES_PATH, "en", "translation.json")).toString())
     }
   }
 }).then(function() {
