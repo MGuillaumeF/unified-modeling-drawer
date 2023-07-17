@@ -5,10 +5,14 @@ import fs from "fs";
 import { join as pathJoin } from "path";
 import url from "url";
 import xml2js from "xml2js";
+import i18next from "i18next";
 
 const ICON_EXT = process.platform === "win32" ? "ico" : "png";
+const RESOURCES_PATH = pathJoin(__dirname, "../resources");
+const ICON_PATH = pathJoin(RESOURCES_PATH, "icon");
+const LOCALES_PATH = pathJoin(RESOURCES_PATH, "locales");
 
-let trayIconPath = pathJoin(__dirname, `../resources/icon.${ICON_EXT}`);
+let trayIconPath = pathJoin(ICON_PATH, `icon.${ICON_EXT}`);
 let iconPath = trayIconPath;
 
 // Définition de la fenêtre Chromium
@@ -16,61 +20,20 @@ let win: BrowserWindow | null = null;
 // save close state to no exit if close is asked, but hide window
 let isQuiting = false;
 
-// la focntion de création de la fenêtre Chromium
-function createWindow(): BrowserWindow {
-  // Création de la fenêtre navigateur Chromium
-  const win = new BrowserWindow({
-    icon: iconPath,
-    webPreferences: {
-      preload: pathJoin(__dirname, "preload.js")
-    }
+function updateLanguage(win : BrowserWindow, language : string) : void {
+  i18next.changeLanguage(language).then((t) => {
+    win.webContents.send("language", language);
+    const menu = Menu.buildFromTemplate(getMenuTemplate(win));
+    Menu.setApplicationMenu(menu);
   });
-  // Définition de la partie System Tray de l'application
-  // Création de l'application System Tray
-  const appIcon = new Tray(trayIconPath);
-  appIcon.setToolTip("Unified Modeling Drawer");
-  // chargement de l'application SPA
-  win.loadURL(
-    process.env["NODE_ENV"] === "development"
-      ? "http://localhost:3000"
-      : url.format({
-          pathname: pathJoin(__dirname, "../../app/build/index.html"),
-          protocol: "file:",
-          slashes: true
-        })
-  );
+}
 
-  // affichage dès que l'appli est prête
-  win.once("ready-to-show", () => {
-    win.show();
-  });
-  win.on("close", function (event) {
-    if (!isQuiting) {
-      event.preventDefault();
-      win.hide();
-    }
-    return false;
-  });
-  // définition du menu
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: "Afficher",
-      click: function () {
-        win.show();
-      }
-    },
-    {
-      label: "Quitter",
-      click: function () {
-        isQuiting = true;
-        app.quit();
-      }
-    }
-  ]);
-  const template: (Electron.MenuItemConstructorOptions | Electron.MenuItem)[] =
-    [
+
+function getMenuTemplate(win : BrowserWindow) : (Electron.MenuItemConstructorOptions | Electron.MenuItem)[] {
+  const { t } = i18next;
+  const template : (Electron.MenuItemConstructorOptions | Electron.MenuItem)[] =   [
       {
-        label: "Fichier",
+        label: t("MENU.FILE.LABEL"),
         submenu: [
           { label: "Nouveau Modèle", accelerator: "CmdOrCtrl+N" },
           {
@@ -150,13 +113,13 @@ function createWindow(): BrowserWindow {
               {
                 label: "Français (FR)",
                 click() {
-                  win.webContents.send("language", "fr");
+                  updateLanguage(win, "fr");
                 }
               },
               {
                 label: "Anglais (US)",
                 click() {
-                  win.webContents.send("language", "us");
+                  updateLanguage(win, "us");
                 }
               }
             ]
@@ -186,7 +149,6 @@ function createWindow(): BrowserWindow {
         ]
       }
     ];
-
   if (process.platform === "darwin") {
     template.unshift({
       label: app.getName(),
@@ -221,29 +183,100 @@ function createWindow(): BrowserWindow {
     //   { role: "front" }
     // ];
   }
+  return template;
+}
 
-  const menu = Menu.buildFromTemplate(template);
+
+// la focntion de création de la fenêtre Chromium
+function createWindow(): BrowserWindow {
+  const { t } = i18next;
+  // Création de la fenêtre navigateur Chromium
+  const win = new BrowserWindow({
+    icon: iconPath,
+    webPreferences: {
+      preload: pathJoin(__dirname, "preload.js")
+    }
+  });
+  // Définition de la partie System Tray de l'application
+  // Création de l'application System Tray
+  const appIcon = new Tray(trayIconPath);
+  appIcon.setToolTip("Unified Modeling Drawer");
+  // chargement de l'application SPA
+  win.loadURL(
+    process.env["NODE_ENV"] === "development"
+      ? "http://localhost:3000"
+      : url.format({
+          pathname: pathJoin(__dirname, "../../app/build/index.html"),
+          protocol: "file:",
+          slashes: true
+        })
+  );
+
+  // affichage dès que l'appli est prête
+  win.once("ready-to-show", () => {
+    win.show();
+  });
+  win.on("close", function (event) {
+    if (!isQuiting) {
+      event.preventDefault();
+      win.hide();
+    }
+    return false;
+  });
+  // définition du menu
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "Afficher",
+      click: function () {
+        win.show();
+      }
+    },
+    {
+      label: "Quitter",
+      click: function () {
+        isQuiting = true;
+        app.quit();
+      }
+    }
+  ]);
+
+  const menu = Menu.buildFromTemplate(getMenuTemplate(win));
   Menu.setApplicationMenu(menu);
 
   appIcon.setContextMenu(contextMenu);
   return win;
 }
-// méthode appelé lorsque l'application est prête
-app.on("ready", createWindow);
 
-// Quit when all windows are closed.
-app.on("window-all-closed", () => {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== "darwin") {
-    app.quit();
+i18next.init({
+  lng: 'fr',
+  resources: {
+    fr: {
+      translation: JSON.parse(fs.readFileSync(pathJoin(LOCALES_PATH, "fr", "translation.json")).toString())
+    },
+    en: {
+      translation: JSON.parse(fs.readFileSync(pathJoin(LOCALES_PATH, "en", "translation.json")).toString())
+    }
   }
+}).then(function() {
+  // méthode appelé lorsque l'application est prête
+  app.on("ready", createWindow);
+
+  // Quit when all windows are closed.
+  app.on("window-all-closed", () => {
+    // On macOS it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
+    if (process.platform !== "darwin") {
+      app.quit();
+    }
+  });
+
+  app.on("activate", () => {
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (win === null) {
+      win = createWindow();
+    }
+  });
 });
 
-app.on("activate", () => {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (win === null) {
-    win = createWindow();
-  }
-});
+
