@@ -20,7 +20,7 @@ let isQuiting = false;
 function updateLanguage(win : BrowserWindow, language : string) : void {
   i18next.changeLanguage(language).then((t) => {
     win.webContents.send("language", language);
-    const menu = Menu.buildFromTemplate(getMenuTemplate(win, t));
+    const menu = Menu.buildFromTemplate(getMenuTemplate(win));
     Menu.setApplicationMenu(menu);
   });
 }
