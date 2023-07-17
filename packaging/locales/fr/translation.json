@@ -1,0 +1,30 @@
+{
+  "MENU" : {
+    "FILE" : {
+      "LABEL" : "Fichier",
+      "SUBMENU" : {
+        "NEW" : {
+          "LABEL" : "Nouveau"
+        },
+        "OPEN" : {
+          "LABEL" : "Ouvrir"
+        },
+        "SAVE" : {
+          "LABEL" : "Sauvegarder"
+        },
+        "SAVE_AS" : {
+          "LABEL" : "Sauvegarder sous..."
+        },
+        "EXPORT_AS" : {
+          "LABEL" : "Exporter en tant que..."
+        },
+        "EXIT" : {
+          "LABEL" : "Quitter"
+        }
+      }
+    },
+    "EDIT" : {
+      "LABEL" : "Édition"
+    }
+  }
+}
