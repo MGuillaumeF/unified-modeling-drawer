@@ -142,7 +142,25 @@ function createWindow(): BrowserWindow {
           { role: "zoomIn", label: "Zoom +" },
           { role: "zoomOut", label: "Zoom -" },
           { type: "separator" },
-          { role: "togglefullscreen", label: "Plein écran" }
+          { role: "togglefullscreen", label: "Plein écran" },
+          { type: "separator" },
+          {
+            label: "languages",
+            submenu: [
+              {
+                label: "Français (FR)",
+                click() {
+                  win.webContents.send("language", "fr");
+                }
+              },
+              {
+                label: "Anglais (US)",
+                click() {
+                  win.webContents.send("language", "us");
+                }
+              }
+            ]
+          }
         ]
       },
       {

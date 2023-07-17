@@ -1,34 +1,13 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { render } from "react-dom";
 import { useTranslation } from "react-i18next";
-import Button from "./components/BasicButton/Button";
 import ClassObject from "./components/ModelObjects/ClassObject/ClassObject";
 import "./i18n";
 import "./index.scss";
 import reportWebVitals from "./reportWebVitals";
 
-const changeLangBtnClick = (
-  event: React.MouseEvent<HTMLButtonElement>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  i18n: any
-): void => {
-  const currentBtnText = String(
-    event?.currentTarget?.textContent
-  ).toLowerCase();
-  if (
-    i18n &&
-    typeof i18n === "object" &&
-    "changeLanguage" in i18n &&
-    ["fr", "en"].includes(currentBtnText)
-  ) {
-    i18n.changeLanguage(currentBtnText);
-  }
-};
-
 const getOnDragOver: React.DragEventHandler<HTMLDivElement> = (e) =>
   e.preventDefault();
-
-const dropZoneStyle = { width: 500, height: 500, border: "1px solid red" };
 
 function App(): JSX.Element {
   const [classObjectList, setClassObjectList] = useState<
@@ -43,12 +22,6 @@ function App(): JSX.Element {
   >([]);
   const { i18n, t } = useTranslation();
 
-  const onLanguageClick = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      changeLangBtnClick(event, i18n);
-    },
-    [i18n]
-  );
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   window.electronAPI.handleOpenFile((event, value) => {
@@ -63,10 +36,17 @@ function App(): JSX.Element {
     }));
     setClassObjectList(classObjectList);
   });
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  window.electronAPI.handleChangeLanguage((event, value) => {
+    console.log(event, value);
+    i18n.changeLanguage(value);
+  });
 
   return (
     <div>
-      <div style={dropZoneStyle} onDragOver={getOnDragOver}>
+      <div>{t("PAGES.SETTINGS.TITLE")}</div>
+      <div onDragOver={getOnDragOver}>
         {classObjectList.map((item) => (
           <ClassObject
             key={item.name}
@@ -74,24 +54,6 @@ function App(): JSX.Element {
             attributes={item.attributes}
           />
         ))}
-      </div>
-      <div>
-        <Button
-          type="button"
-          level="secondary"
-          id="lang-fr"
-          onClick={onLanguageClick}
-        >
-          FR
-        </Button>
-        <Button
-          type="button"
-          level="secondary"
-          id="lang-en"
-          onClick={onLanguageClick}
-        >
-          EN
-        </Button>
       </div>
     </div>
   );
