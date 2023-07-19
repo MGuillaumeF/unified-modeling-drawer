@@ -101,6 +101,12 @@ jobs:
         working-directory: ${{github.workspace}}
         run: npm run build:app
 
+      - name: Make Directories
+        working-directory: ${{github.workspace}}
+        run: |
+          mkdir -p packaging/build/app
+          mkdir -p packaging/build/resources
+
       - name: Build Packaging
         working-directory: ${{github.workspace}}
         run: npm run el:package --linux
