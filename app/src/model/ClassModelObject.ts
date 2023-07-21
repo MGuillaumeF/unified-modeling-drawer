@@ -18,10 +18,13 @@ export default class ClassModelObjet extends DraggableModelObjet {
   public get attributes(): AttributeModelObject[] {
     return this._attributes;
   }
-  public set attributes(_attributes: AttributeModelObject[]) {
-    this._attributes = _attributes;
+  public set attributes(attributes: AttributeModelObject[]) {
+    this._attributes = attributes;
   }
   public get name(): string {
     return this._name;
+  }
+  public set name(name: string) {
+    this._name = namee;
   }
 }
