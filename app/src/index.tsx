@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { render } from "react-dom";
 import { useTranslation } from "react-i18next";
+import HistoryManager from "./HistoryManager/HistoryManager";
 import ClassObject, {
   ClassObjectProps
 } from "./components/ModelObjects/ClassObject/ClassObject";
 import "./i18n";
 import "./index.scss";
 import reportWebVitals from "./reportWebVitals";
+
+const historyManager = new HistoryManager();
 
 const getOnDragOver: React.DragEventHandler<HTMLDivElement> = (e) =>
   e.preventDefault();
@@ -15,7 +18,7 @@ function App(): React.JSX.Element {
   const [classObjectList, setClassObjectList] = useState<
     Array<ClassObjectProps>
   >([]);
-  const { i18n, t } = useTranslation();
+  const { i18n } = useTranslation();
 
   if ("electronAPI" in window) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
