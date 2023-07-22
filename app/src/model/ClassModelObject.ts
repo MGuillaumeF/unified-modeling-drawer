@@ -25,6 +25,6 @@ export default class ClassModelObjet extends DraggableModelObjet {
     return this._name;
   }
   public set name(name: string) {
-    this._name = namee;
+    this._name = name;
   }
 }
