@@ -1,9 +1,10 @@
 // définition des paquets Node.js requires
-import { BrowserWindow, Menu, Tray, app } from "electron";
+import { BrowserWindow, Menu, Tray, app, ipcMain } from "electron";
 
 import fs from "fs";
 import i18next, { TFunction } from "i18next";
 import { join as pathJoin } from "path";
+import ModelObject, { IModelObject } from "./.model/ModelObject";
 import { getMenuTemplate } from "./menu";
 
 const ICON_EXT = process.platform === "win32" ? "ico" : "png";
@@ -47,6 +48,14 @@ function createWindow(): BrowserWindow {
     }
     return false;
   });
+  ipcMain.on(
+    "create-model",
+    (event: Electron.IpcMainEvent, modelObject: IModelObject) => {
+      const model = new ModelObject(modelObject);
+      console.log("-- ", model);
+      win.setTitle(win.getTitle() + " - " + model.name);
+    }
+  );
   // définition du menu
   const contextMenu = Menu.buildFromTemplate([
     {

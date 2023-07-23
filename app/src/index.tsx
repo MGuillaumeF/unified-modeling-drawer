@@ -1,64 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 import { render } from "react-dom";
-import { useTranslation } from "react-i18next";
-import HistoryManager from "./HistoryManager/HistoryManager";
-import ClassObject, {
-  ClassObjectProps
-} from "./components/ModelObjects/ClassObject/ClassObject";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ModelDrawArea } from "./components/ModelDrawArea/ModelDrawArea";
+import NewModelForm from "./components/pages/NewModelForm/NewModelForm";
 import "./i18n";
 import "./index.scss";
 import reportWebVitals from "./reportWebVitals";
 
-const historyManager = new HistoryManager();
-
-const getOnDragOver: React.DragEventHandler<HTMLDivElement> = (e) =>
-  e.preventDefault();
-
 function App(): React.JSX.Element {
-  const [classObjectList, setClassObjectList] = useState<
-    Array<ClassObjectProps>
-  >([]);
-  const { i18n } = useTranslation();
-
-  if ("electronAPI" in window) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    window.electronAPI.handleOpenFile((event, value) => {
-      console.log(event, value);
-      const classObjectList = value.model.class.map((item: any) => ({
-        name: item.$.name,
-        isAbstract: item.$.abstract === "true",
-        attributes: item.attribute.map((item: any) => ({
-          visibility: item.$.visibility,
-          name: item.$.name,
-          type: item.$.type
-        }))
-      }));
-      setClassObjectList(classObjectList);
-    });
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    window.electronAPI.handleChangeLanguage((event, value) => {
-      console.log(event, value);
-      i18n.changeLanguage(value);
-    });
-  }
-
   return (
-    <div>
-      <div onDragOver={getOnDragOver}>
-        {classObjectList.map((item) => (
-          <ClassObject
-            key={item.name}
-            name={item.name}
-            isAbstract={item.isAbstract}
-            attributes={item.attributes}
-          />
-        ))}
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="*" element={<div>Page not found</div>}></Route>
+        <Route path="/" element={<ModelDrawArea />}></Route>
+        <Route path="/model/new" element={<NewModelForm />}></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
-render(<App />, document.getElementById("root"));
+render(<App />, document.body);
 reportWebVitals(console.log);

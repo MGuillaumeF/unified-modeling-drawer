@@ -1,4 +1,4 @@
-import { Visibility } from "src/components/ModelObjects/AttributeObject/translator";
+export type Visibility = "private" | "protected" | "public";
 
 export default class AttributeModelObject {
   private _name: string;
@@ -12,14 +12,14 @@ export default class AttributeModelObject {
   public get type(): string {
     return this._type;
   }
-  public set type(type : string) {
+  public set type(type: string) {
     this._type = type;
   }
   public get visibility(): Visibility {
     return this._visibility;
   }
-  public set visibility(visibility : Visibility) {
-    this._visibility = visibility
+  public set visibility(visibility: Visibility) {
+    this._visibility = visibility;
   }
   public get name(): string {
     return this._name;

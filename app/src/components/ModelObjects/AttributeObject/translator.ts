@@ -1,4 +1,4 @@
-export type Visibility = "private" | "protected" | "public";
+import { Visibility } from "../../../.model/AttributeModelObject";
 
 export function getVisibilityChar(visibility: Visibility): React.ReactNode {
   let visibilityChar = "+";

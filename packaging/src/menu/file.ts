@@ -2,6 +2,7 @@ import { BrowserWindow, dialog } from "electron";
 import { readFileSync } from "fs";
 import { TFunction } from "i18next";
 import { Parser } from "xml2js";
+import NewModelWindow from "../NewModelWindow/NewModelWindow";
 
 export function getFileMenuTemplate(
   win: BrowserWindow,
@@ -10,7 +11,13 @@ export function getFileMenuTemplate(
   return {
     label: t("MENU.FILE.LABEL"),
     submenu: [
-      { label: t("MENU.FILE.SUBMENU.NEW.LABEL"), accelerator: "CmdOrCtrl+N" },
+      {
+        label: t("MENU.FILE.SUBMENU.NEW.LABEL"),
+        accelerator: "CmdOrCtrl+N",
+        click() {
+          NewModelWindow(win);
+        }
+      },
       {
         label: t("MENU.FILE.SUBMENU.OPEN.LABEL"),
         accelerator: "CmdOrCtrl+O",

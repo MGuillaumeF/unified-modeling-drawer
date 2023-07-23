@@ -1,5 +1,6 @@
 import React from "react";
-import { Visibility, getVisibilityChar } from "./translator";
+import { Visibility } from "../../../.model/AttributeModelObject";
+import { getVisibilityChar } from "./translator";
 
 export type AttributeObjectProps = {
   name: string;

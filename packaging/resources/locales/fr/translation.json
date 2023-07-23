@@ -4,7 +4,10 @@
       "LABEL": "Fichier",
       "SUBMENU": {
         "NEW": {
-          "LABEL": "Nouveau"
+          "LABEL": "Nouveau",
+          "WINDOW": {
+            "TITLE": "Créer un nouveau Modèle"
+          }
         },
         "OPEN": {
           "LABEL": "Ouvrir"

@@ -1,4 +1,4 @@
-import DataModelObject from "src/model/DataModelObject";
+import DataModelObject from "../.model/DataModelObject";
 import Action from "./Action";
 
 export default class HistoryManager<T extends DataModelObject> {

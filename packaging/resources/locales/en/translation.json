@@ -4,7 +4,10 @@
       "LABEL": "File",
       "SUBMENU": {
         "NEW": {
-          "LABEL": "New"
+          "LABEL": "New",
+          "WINDOW": {
+            "TITLE": "Create new Model"
+          }
         },
         "OPEN": {
           "LABEL": "Open"
