@@ -1,12 +1,26 @@
 import { BrowserWindow, dialog } from "electron";
-import { readFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 import { TFunction } from "i18next";
-import { Parser } from "xml2js";
+import { Builder, Parser } from "xml2js";
+import ModelObject, { IModelObject } from "../.model/ModelObject";
 import NewModelWindow from "../NewModelWindow/NewModelWindow";
 
+/**
+ * Function to create File Menu
+ * @param win The Main BrowserWindow
+ * @param t The translator function
+ * @param displayedModel The ModelObject displayed currently on view
+ * @returns The file menu
+ */
 export function getFileMenuTemplate(
   win: BrowserWindow,
-  t: TFunction<"translation", undefined>
+  t: TFunction<"translation", undefined>,
+  displayedModelUpdater: (
+    win: BrowserWindow,
+    t: TFunction<"translation", undefined>,
+    modelObject: IModelObject
+  ) => void,
+  displayedModel?: ModelObject
 ): Electron.MenuItemConstructorOptions | Electron.MenuItem {
   return {
     label: t("MENU.FILE.LABEL"),
@@ -26,7 +40,8 @@ export function getFileMenuTemplate(
           // construct the select file dialog
           dialog
             .showOpenDialog({
-              properties: ["openFile"]
+              properties: ["openFile"],
+              filters: [{ name: "model", extensions: ["xml"] }]
             })
             .then(function (fileObj: Electron.OpenDialogReturnValue) {
               // the fileObj has two props
@@ -39,6 +54,15 @@ export function getFileMenuTemplate(
                   parser.parseString(
                     xmlContent,
                     function (error: Error | null, result: any): void {
+                      // TODO convert to ModelObject here before send to html application
+                      const modelObject: IModelObject = {
+                        name: result.model.name,
+                        version: result.model.version,
+                        description: result.model.description,
+                        lastUpdateDate: new Date(result.model.lastUpdateDate),
+                        creationDate: new Date(result.model.creationDate)
+                      };
+                      displayedModelUpdater(win, t, modelObject);
                       win.webContents.send("file-open", result);
                     }
                   );
@@ -51,13 +75,34 @@ export function getFileMenuTemplate(
             });
         }
       },
-      { label: t("MENU.FILE.SUBMENU.SAVE.LABEL"), accelerator: "CmdOrCtrl+S" },
       {
-        label: t("MENU.FILE.SUBMENU.SAVE_AS.LABEL"),
-        accelerator: "CmdOrCtrl+Alt+S"
+        label: t("MENU.FILE.SUBMENU.SAVE.LABEL"),
+        accelerator: "CmdOrCtrl+S",
+        enabled: Boolean(displayedModel),
+        click() {
+          if (displayedModel) {
+            const data = displayedModel.toObject();
+            if (data.sourcePath !== undefined) {
+              save(data as Required<IModelObject>);
+            } else {
+              saveAs(displayedModel);
+            }
+          }
+        }
       },
       {
-        label: t("MENU.FILE.SUBMENU.EXPORT_AS.LABEL")
+        label: t("MENU.FILE.SUBMENU.SAVE_AS.LABEL"),
+        accelerator: "CmdOrCtrl+Alt+S",
+        enabled: Boolean(displayedModel),
+        click() {
+          if (displayedModel) {
+            saveAs(displayedModel);
+          }
+        }
+      },
+      {
+        label: t("MENU.FILE.SUBMENU.EXPORT_AS.LABEL"),
+        enabled: Boolean(displayedModel)
       },
       {
         label: t("MENU.FILE.SUBMENU.EXIT.LABEL"),
@@ -65,4 +110,40 @@ export function getFileMenuTemplate(
       }
     ]
   };
+}
+
+/**
+ * Function to save file with custom path
+ * @param modelToSave The model to Save
+ */
+function saveAs(modelToSave: ModelObject) {
+  // construct the save file dialog
+  dialog
+    .showSaveDialog({
+      filters: [{ name: "model", extensions: ["xml"] }]
+    })
+    .then(function (fileObj: Electron.SaveDialogReturnValue) {
+      const { filePath } = fileObj;
+      if (!fileObj.canceled && filePath) {
+        modelToSave.sourcePath = filePath;
+        save(modelToSave.toObject() as Required<IModelObject>);
+      }
+    })
+    // should always handle the error yourself, later Electron release might crash if you don't
+    .catch(function (err) {
+      console.error(err);
+    });
+}
+
+/**
+ * Function to save file with custom path
+ * @param modelToSave The model to Save
+ */
+function save(modelToSave: Required<IModelObject>) {
+  modelToSave.lastUpdateDate = new Date();
+  const builder = new Builder({ rootName: "model" });
+  const obj = new ModelObject(modelToSave).toPrint();
+  // remove sourcePath before write on disk
+  // convert all dates to timestamp before write on disk
+  writeFileSync(modelToSave.sourcePath, builder.buildObject(obj));
 }

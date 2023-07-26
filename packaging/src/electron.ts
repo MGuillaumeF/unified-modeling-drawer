@@ -19,6 +19,7 @@ let iconPath = trayIconPath;
 let win: BrowserWindow | null = null;
 // save close state to no exit if close is asked, but hide window
 let isQuiting = false;
+let displayedModel: ModelObject | undefined;
 
 // la focntion de création de la fenêtre Chromium
 function createWindow(): BrowserWindow {
@@ -51,9 +52,15 @@ function createWindow(): BrowserWindow {
   ipcMain.on(
     "create-model",
     (event: Electron.IpcMainEvent, modelObject: IModelObject) => {
-      const model = new ModelObject(modelObject);
-      console.log("-- ", model);
-      win.setTitle(win.getTitle() + " - " + model.name);
+      displayedModel = new ModelObject(modelObject);
+      win.setTitle(
+        process.env["npm_package_name"] + " - " + displayedModel.name
+      );
+
+      const menu = Menu.buildFromTemplate(
+        getMenuTemplate(win, t, displayedModelUpdater, displayedModel)
+      );
+      Menu.setApplicationMenu(menu);
     }
   );
   // définition du menu
@@ -73,7 +80,9 @@ function createWindow(): BrowserWindow {
     }
   ]);
 
-  const menu = Menu.buildFromTemplate(getMenuTemplate(win, t));
+  const menu = Menu.buildFromTemplate(
+    getMenuTemplate(win, t, displayedModelUpdater, displayedModel)
+  );
   Menu.setApplicationMenu(menu);
 
   appIcon.setContextMenu(contextMenu);
@@ -105,7 +114,9 @@ i18next
     app.whenReady().then(() => {
       const localWin = createWindow();
       i18next.on("languageChanged", (lng: string) => {
-        const menu = Menu.buildFromTemplate(getMenuTemplate(localWin, t));
+        const menu = Menu.buildFromTemplate(
+          getMenuTemplate(localWin, t, displayedModelUpdater, displayedModel)
+        );
         Menu.setApplicationMenu(menu);
       });
       win = localWin;
@@ -128,3 +139,37 @@ i18next
       }
     });
   });
+
+function displayedModelUpdater(
+  win: BrowserWindow,
+  t: TFunction<"translation", undefined>,
+  modelObject: IModelObject
+): void {
+  displayedModel = new ModelObject(modelObject);
+  win.setTitle(process.env["npm_package_name"] + " - " + displayedModel.name);
+
+  const menu = Menu.buildFromTemplate(
+    getMenuTemplate(win, t, displayedModelUpdater, displayedModel)
+  );
+  Menu.setApplicationMenu(menu);
+}
+// function modelUpdater(modelObject : IModelObject) {
+
+// ipcMain.on(
+//   "file-open-internal",
+//   (event: Electron.IpcMainEvent, fileContent: any) => {
+//     const modelObject : IModelObject = {
+//       name : fileContent.model.name,
+//       version : fileContent.model.version,
+//       description : fileContent.model.description,
+//       lastUpdateDate :new Date(fileContent.model.lastUpdateDate),
+//       creationDate :new Date(fileContent.model.creationDate)
+//     }
+//     displayedModel = new ModelObject(modelObject);
+//     win.setTitle(process.env["npm_package_name"] + " - " + displayedModel.name);
+
+//     const menu = Menu.buildFromTemplate(getMenuTemplate(win, t, displayedModel));
+//     Menu.setApplicationMenu(menu);
+//   }
+// );
+// }

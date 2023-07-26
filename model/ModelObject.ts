@@ -11,7 +11,7 @@ export default class ModelObject {
   private _name: string;
   private _description: string;
   private _version: number;
-  private _sourcePath: string | null = null;
+  private _sourcePath?: string;
   private _creationDate: Date;
   private _lastUpdateDate: Date;
   constructor({
@@ -49,7 +49,7 @@ export default class ModelObject {
   public set version(version: number) {
     this._version = version;
   }
-  public get sourcePath(): string | null {
+  public get sourcePath(): string | undefined {
     return this._sourcePath;
   }
   public set sourcePath(sourcePath: string) {
@@ -71,7 +71,16 @@ export default class ModelObject {
       version: this._version,
       creationDate: this._creationDate,
       lastUpdateDate: this._lastUpdateDate,
-      sourcePath: this._sourcePath || undefined
+      sourcePath: this._sourcePath
+    };
+  }
+  public toPrint() {
+    return {
+      name: this._name,
+      description: this._description,
+      version: this._version,
+      creationDate: this._creationDate.getTime(),
+      lastUpdateDate: this._lastUpdateDate.getTime()
     };
   }
 }
