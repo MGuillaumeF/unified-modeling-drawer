@@ -2,7 +2,7 @@
 import { BrowserWindow, Menu, Tray, app, ipcMain } from "electron";
 
 import fs from "fs";
-import i18next, { TFunction } from "i18next";
+import i18next from "i18next";
 import { join as pathJoin } from "path";
 import ModelObject, { IModelObject } from "./.model/ModelObject";
 import { getMenuTemplate } from "./menu";
@@ -58,7 +58,7 @@ function createWindow(): BrowserWindow {
       );
 
       const menu = Menu.buildFromTemplate(
-        getMenuTemplate(win, t, displayedModelUpdater, displayedModel)
+        getMenuTemplate(win, displayedModelUpdater, displayedModel)
       );
       Menu.setApplicationMenu(menu);
     }
@@ -81,7 +81,7 @@ function createWindow(): BrowserWindow {
   ]);
 
   const menu = Menu.buildFromTemplate(
-    getMenuTemplate(win, t, displayedModelUpdater, displayedModel)
+    getMenuTemplate(win, displayedModelUpdater, displayedModel)
   );
   Menu.setApplicationMenu(menu);
 
@@ -110,12 +110,12 @@ i18next
       }
     }
   })
-  .then(function (t: TFunction<"translation", undefined>) {
+  .then(function () {
     app.whenReady().then(() => {
       const localWin = createWindow();
       i18next.on("languageChanged", (lng: string) => {
         const menu = Menu.buildFromTemplate(
-          getMenuTemplate(localWin, t, displayedModelUpdater, displayedModel)
+          getMenuTemplate(localWin, displayedModelUpdater, displayedModel)
         );
         Menu.setApplicationMenu(menu);
       });
@@ -142,34 +142,13 @@ i18next
 
 function displayedModelUpdater(
   win: BrowserWindow,
-  t: TFunction<"translation", undefined>,
   modelObject: IModelObject
 ): void {
   displayedModel = new ModelObject(modelObject);
   win.setTitle(process.env["npm_package_name"] + " - " + displayedModel.name);
 
   const menu = Menu.buildFromTemplate(
-    getMenuTemplate(win, t, displayedModelUpdater, displayedModel)
+    getMenuTemplate(win, displayedModelUpdater, displayedModel)
   );
   Menu.setApplicationMenu(menu);
 }
-// function modelUpdater(modelObject : IModelObject) {
-
-// ipcMain.on(
-//   "file-open-internal",
-//   (event: Electron.IpcMainEvent, fileContent: any) => {
-//     const modelObject : IModelObject = {
-//       name : fileContent.model.name,
-//       version : fileContent.model.version,
-//       description : fileContent.model.description,
-//       lastUpdateDate :new Date(fileContent.model.lastUpdateDate),
-//       creationDate :new Date(fileContent.model.creationDate)
-//     }
-//     displayedModel = new ModelObject(modelObject);
-//     win.setTitle(process.env["npm_package_name"] + " - " + displayedModel.name);
-
-//     const menu = Menu.buildFromTemplate(getMenuTemplate(win, t, displayedModel));
-//     Menu.setApplicationMenu(menu);
-//   }
-// );
-// }
