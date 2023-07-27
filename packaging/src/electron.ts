@@ -23,7 +23,6 @@ let displayedModel: ModelObject | undefined;
 
 // la focntion de création de la fenêtre Chromium
 function createWindow(): BrowserWindow {
-  const { t } = i18next;
   // Création de la fenêtre navigateur Chromium
   const win = new BrowserWindow({
     icon: iconPath,
