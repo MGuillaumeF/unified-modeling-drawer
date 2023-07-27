@@ -60,7 +60,7 @@ export function getFileMenuTemplate(
                         lastUpdateDate: new Date(result.model.lastUpdateDate),
                         creationDate: new Date(result.model.creationDate)
                       };
-                      displayedModelUpdater(win, t, modelObject);
+                      displayedModelUpdater(win, modelObject);
                       win.webContents.send("file-open", result);
                     }
                   );

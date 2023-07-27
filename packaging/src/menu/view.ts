@@ -1,5 +1,5 @@
 import { BrowserWindow } from "electron";
-import i18next, { t } from "i18next";
+import i18next, { t, TFunction } from "i18next";
 
 export function getViewMenuTemplate(
   win: BrowserWindow
