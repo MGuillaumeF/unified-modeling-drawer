@@ -124,7 +124,11 @@ function saveAs(modelToSave: ModelObject) {
       const { filePath } = fileObj;
       if (!fileObj.canceled && filePath) {
         modelToSave.sourcePath = filePath;
-        save(modelToSave.toObject() as Required<IModelObject>);
+        const modelToSaveFilled : Required<IModelObject> = {
+          ...modelToSave.toObject(),
+          sourcePath: filePath
+        }
+        save(modelToSaveFilled);
       }
     })
     // should always handle the error yourself, later Electron release might crash if you don't
