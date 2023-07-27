@@ -1,6 +1,6 @@
 import { BrowserWindow, dialog } from "electron";
 import { readFileSync, writeFileSync } from "fs";
-import { TFunction } from "i18next";
+import { t } from "i18next";
 import { Builder, Parser } from "xml2js";
 import ModelObject, { IModelObject } from "../.model/ModelObject";
 import NewModelWindow from "../NewModelWindow/NewModelWindow";
@@ -14,10 +14,8 @@ import NewModelWindow from "../NewModelWindow/NewModelWindow";
  */
 export function getFileMenuTemplate(
   win: BrowserWindow,
-  t: TFunction<"translation", undefined>,
   displayedModelUpdater: (
     win: BrowserWindow,
-    t: TFunction<"translation", undefined>,
     modelObject: IModelObject
   ) => void,
   displayedModel?: ModelObject

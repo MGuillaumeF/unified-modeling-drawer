@@ -1,9 +1,8 @@
 import { BrowserWindow } from "electron";
-import { TFunction } from "i18next";
+import { t } from "i18next";
 
 export function getWindowMenuTemplate(
-  win: BrowserWindow,
-  t: TFunction<"translation", undefined>
+  win: BrowserWindow
 ): Electron.MenuItemConstructorOptions | Electron.MenuItem {
   return {
     role: "window",

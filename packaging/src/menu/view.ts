@@ -1,9 +1,8 @@
 import { BrowserWindow } from "electron";
-import i18next, { TFunction } from "i18next";
+import i18next, { t } from "i18next";
 
 export function getViewMenuTemplate(
-  win: BrowserWindow,
-  t: TFunction<"translation", undefined>
+  win: BrowserWindow
 ): Electron.MenuItemConstructorOptions | Electron.MenuItem {
   return {
     label: t("MENU.VIEW.LABEL"),

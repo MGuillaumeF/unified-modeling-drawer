@@ -1,5 +1,4 @@
 import { BrowserWindow, app } from "electron";
-import { TFunction } from "i18next";
 import ModelObject, { IModelObject } from "src/.model/ModelObject";
 import { getEditMenuTemplate } from "./edit";
 import { getFileMenuTemplate } from "./file";
@@ -9,21 +8,19 @@ import { getWindowMenuTemplate } from "./window";
 
 export function getMenuTemplate(
   win: BrowserWindow,
-  t: TFunction<"translation", undefined>,
   displayedModelUpdater: (
     win: BrowserWindow,
-    t: TFunction<"translation", undefined>,
     modelObject: IModelObject
   ) => void,
   displayedModel?: ModelObject
 ): (Electron.MenuItemConstructorOptions | Electron.MenuItem)[] {
   const template: (Electron.MenuItemConstructorOptions | Electron.MenuItem)[] =
     [
-      getFileMenuTemplate(win, t, displayedModelUpdater, displayedModel),
-      getEditMenuTemplate(win, t),
-      getViewMenuTemplate(win, t),
-      getWindowMenuTemplate(win, t),
-      getHelpMenuTemplate(win, t)
+      getFileMenuTemplate(win, displayedModelUpdater, displayedModel),
+      getEditMenuTemplate(win),
+      getViewMenuTemplate(win),
+      getWindowMenuTemplate(win),
+      getHelpMenuTemplate(win)
     ];
   if (process.platform === "darwin") {
     template.unshift({
