@@ -1,5 +1,7 @@
+import { IpcRendererEvent } from "electron";
 import React from "react";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
+import { useTranslation } from "react-i18next";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ModelDrawArea } from "./components/ModelDrawArea/ModelDrawArea";
 import NewModelForm from "./components/pages/NewModelForm/NewModelForm";
@@ -8,6 +10,15 @@ import "./index.scss";
 import reportWebVitals from "./reportWebVitals";
 
 function App(): React.JSX.Element {
+  const { i18n } = useTranslation();
+
+  if ("electronAPI" in window) {
+    window.electronAPI.handleChangeLanguage(
+      (event: IpcRendererEvent, value: any): void => {
+        i18n.changeLanguage(value);
+      }
+    );
+  }
   return (
     <BrowserRouter>
       <Routes>
@@ -19,5 +30,7 @@ function App(): React.JSX.Element {
   );
 }
 
-render(<App />, document.body);
+const root = createRoot(document.body);
+root.render(<App />);
+
 reportWebVitals(console.log);

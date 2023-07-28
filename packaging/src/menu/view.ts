@@ -1,5 +1,5 @@
 import { BrowserWindow } from "electron";
-import i18next, { t, TFunction } from "i18next";
+import i18next, { t } from "i18next";
 
 export function getViewMenuTemplate(
   win: BrowserWindow
@@ -49,9 +49,7 @@ export function getViewMenuTemplate(
 }
 
 function updateLanguage(win: BrowserWindow, language: string): void {
-  i18next
-    .changeLanguage(language)
-    .then((t: TFunction<"translation", undefined>) => {
-      win.webContents.send("language", language);
-    });
+  i18next.changeLanguage(language).then((): void => {
+    win.webContents.send("language", language);
+  });
 }

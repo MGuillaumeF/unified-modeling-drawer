@@ -1,52 +1,14 @@
 {
-  "PAGES": {
-    "HOME": {},
-    "SETTINGS": {
-      "TITLE": "Settings",
-      "MENU": {
-        "CONTROL": "Control settings",
-        "LANGUAGES": "Change language",
-        "SOUND": "Sound settings",
-        "VIDEO": "Video settings"
-      }
-    },
-    "SCORES": {}
-  },
   "FORMS": {
-    "SIGN_IN": {
-      "TITLE": "Sign In",
-      "FIELDS": {
-        "IDENTIFIER": {
-          "LABEL": "Identifier"
+    "NEW": {
+      "INPUTS": {
+        "NAME": {
+          "PLACEHOLDER": "Name of model"
         },
-        "PASSWORD": {
-          "LABEL": "Password"
+        "DESCRIPTION": {
+          "PLACEHOLDER": "Description of model"
         },
-        "SUBMIT": {
-          "LABEL": "Sign In"
-        }
-      }
-    },
-    "SIGN_UP": {
-      "TITLE": "Sign Up",
-      "FIELDS": {
-        "EMAIL": {
-          "LABEL": "Enter an email address"
-        },
-        "IDENTIFIER": {
-          "LABEL": "Choose an identifier",
-          "PLACEHOLDER": "MGuillaumeF",
-          "HELPER": "Your identifier will be visible by other users logged or not, it will be ask to at the next login on game"
-        },
-        "PASSWORD": {
-          "LABEL": "Enter a password"
-        },
-        "CONFIRM": {
-          "LABEL": "Confirm password"
-        },
-        "SUBMIT": {
-          "LABEL": "Sign Up"
-        }
+        "SUBMIT_BUTTON": "Create"
       }
     }
   },
