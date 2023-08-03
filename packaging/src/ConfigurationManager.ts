@@ -12,43 +12,48 @@ export class ConfigurationError extends Error {
  }
 }
 
+interface ConfigurationManagerParams {filename ?: string; strict?: boolean; onError ?: (error : ConfigurationError) => void}
 
 export default class ConfigurationManager {
   private _filepath : string;
   private _configuration : Configuration = { language : "fr"};
+  private _strict = false;
+  private _onError ?: (error : ConfigurationError) => void;
   private static _instance : ConfigurationManager | null = null;
-  private constructor(params ?: {filename ?: string; strict?: boolean; onError ?: (error : ConfigurationError) => void}) {
+  private constructor(params ?: ConfigurationManagerParams ) {
     this._filepath = params?.filename !== undefined ? path.resolve(__dirname, params?.filename) : path.resolve(__dirname, "configuration.json")
+    this._strict = params?.strict ?? false;
+    this._onError = params?.onError;
     try {
       const configurationFileContent = JSON.parse(readFileSync(this._filepath).toString());
       if (ConfigurationManager.isValid(configurationFileContent)) {
         this._configuration = configurationFileContent;
       } else {
-        const error = new ConfigurationError("invalid configuration file content");
-        if (params?.onError) {
-          params.onError(error);
-        }
-        if (params?.strict) {
-          throw error;
-        }
+        this.manageError(new ConfigurationError("invalid configuration file content"));
       }
     } catch (e) {
-      const error = new ConfigurationError("invalid configuration file reading", {cause : e});
-      if (params?.onError) {
-        params.onError(error);
+      let option : {cause : Error} | undefined;
+      if (e instanceof Error) {
+        option = {cause : e};
       }
-      if (params?.strict) {
-        throw error;
-      }
+      this.manageError(new ConfigurationError("invalid configuration file reading", option));
     }
   }
-  public static getInstance(filename ?: string) : ConfigurationManager  {
+  public static getInstance(params ?: ConfigurationManagerParams) : ConfigurationManager  {
     if (this._instance === null) {
-      this._instance = new ConfigurationManager(filename)
+      this._instance = new ConfigurationManager(params)
     }
     return this._instance;
   }
 
+  private manageError(error : ConfigurationError) : void {
+    if (this._onError) {
+        this._onError(error);
+    }
+    if (this._strict) {
+        throw error;
+    }
+  }
   private static isValid(data : unknown) : data is Configuration {
     const validator = new Validator();
     const schema = {
