@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import path from "path";
 import { Validator } from "jsonschema";
 
@@ -25,11 +25,15 @@ export default class ConfigurationManager {
     this._strict = params?.strict ?? false;
     this._onError = params?.onError;
     try {
-      const configurationFileContent = JSON.parse(readFileSync(this._filepath).toString());
-      if (ConfigurationManager.isValid(configurationFileContent)) {
-        this._configuration = configurationFileContent;
-      } else {
-        this.manageError(new ConfigurationError("invalid configuration file content"));
+      if (existsSync(this._filepath)) {
+        const configurationFileContent = JSON.parse(readFileSync(this._filepath).toString());
+        if (ConfigurationManager.isValid(configurationFileContent)) {
+          this._configuration = configurationFileContent;
+        } else {
+          this.manageError(new ConfigurationError("invalid configuration file content"));
+        }
+      } else if (params?.filename) {
+        this.manageError(new ConfigurationError("configuration file not found"))
       }
     } catch (e) {
       let option : {cause : Error} | undefined;
