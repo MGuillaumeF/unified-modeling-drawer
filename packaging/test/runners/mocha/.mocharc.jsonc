@@ -3,5 +3,5 @@
     "packaging/test/runners/mocha/init.mjs",
     "source-map-support/register"
   ],
-  "spec": ["packagingtest/ut/**/*.spec.ts"]
+  "spec": ["packaging/test/ut/**/*.spec.ts"]
 }
