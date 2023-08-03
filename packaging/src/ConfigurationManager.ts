@@ -24,7 +24,7 @@ export default class ConfigurationManager {
       if (ConfigurationManager.isValid(configurationFileContent)) {
         this._configuration = configurationFileContent;
       } else {
-        const error new ConfigurationError("invalid configuration file content");
+        const error = new ConfigurationError("invalid configuration file content");
         if (params?.onError) {
           params.onError(error);
         }
@@ -33,7 +33,7 @@ export default class ConfigurationManager {
         }
       }
     } catch (e) {
-      const error new ConfigurationError("invalid configuration file reading", {cause : e});
+      const error = new ConfigurationError("invalid configuration file reading", {cause : e});
       if (params?.onError) {
         params.onError(error);
       }
