@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import ConfigurationManager, { ConfigurationManagerError } from "../../src/ConfigurationManager";
+import ConfigurationManager, { ConfigurationError } from "../../src/ConfigurationManager";
 
 describe("ConfigurationManager Test Suite", function () {
   it("Call instance with not existing file in strict mode", function () {
@@ -8,7 +8,7 @@ describe("ConfigurationManager Test Suite", function () {
     } catch (e) {
       console.error("error raised un catch", e);
 
-      expect(e instanceof ConfigurationManagerError).to.equal(
+      expect(e instanceof ConfigurationError).to.equal(
         true,
         "Test error is congiguration manager error instance"
       );
