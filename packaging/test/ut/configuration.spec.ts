@@ -17,7 +17,7 @@ describe("ConfigurationManager Test Suite", function () {
         console.error("error stack", e.stack);
         console.error("error string", e.toString());
         expect(e.message).to.equal(
-          "configuration file not exist",
+          "configuration file not found",
           "test message of custom error"
         );
       }
