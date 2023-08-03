@@ -29,7 +29,20 @@ export default class ConfigurationManager {
 
   private static isValid(data : unknown) : data is Configuration {
     const validator = new Validator();
-    const schema = {"language": "string"};
+    const schema = {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://example.com/configuration.schema.json",
+      "title": "Configuration",
+      "description": "The configuration of application",
+      "type": "object",
+      "properties": {
+        "language": {
+          "description": "The language to use in application",
+          "type": "string"
+        }
+      },
+      "required": [ "language" ]
+    };
     const res = (validator.validate(data, schema));
     return res.valid;
   }
