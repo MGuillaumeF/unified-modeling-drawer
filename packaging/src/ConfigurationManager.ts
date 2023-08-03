@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import path from "path";
 
-class ConfigurationManager {
+export default class ConfigurationManager {
   private _filepath : string;
   private _configuration : any;
   private static _instance : ConfigurationManager | null = null;
