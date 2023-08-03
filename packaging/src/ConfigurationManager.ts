@@ -14,7 +14,7 @@ export default class ConfigurationManager {
   private constructor(filename ?: string) {
     this._filepath = filename !== undefined ? path.resolve(__dirname, filename) : path.resolve(__dirname, "configuration.json")
     const configurationFileContent = JSON.parse(readFileSync(this._filepath).toString());
-    if (isValid(configurationFileContent)) {
+    if (ConfigurationManager.isValid(configurationFileContent)) {
       this._configuration = configurationFileContent;
     } else {
       throw new Error("invalid configuration file content")
