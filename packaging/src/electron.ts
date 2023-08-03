@@ -6,6 +6,7 @@ import i18next from "i18next";
 import { join as pathJoin } from "path";
 import ModelObject, { IModelObject } from "./.model/ModelObject";
 import { getMenuTemplate } from "./menu";
+import ConfigurationManager from "./ConfigurationManager";
 
 const ICON_EXT = process.platform === "win32" ? "ico" : "png";
 const RESOURCES_PATH = pathJoin(__dirname, "./resources");
@@ -20,6 +21,7 @@ let win: BrowserWindow | null = null;
 // save close state to no exit if close is asked, but hide window
 let isQuiting = false;
 let displayedModel: ModelObject | undefined;
+const configurationManager = ConfigurationManager.getInstance();
 
 // la focntion de création de la fenêtre Chromium
 function createWindow(): BrowserWindow {
