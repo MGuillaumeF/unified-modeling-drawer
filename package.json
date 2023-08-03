@@ -178,6 +178,7 @@
   },
   "dependencies": {
     "i18next": "^23.3.0",
+    "jsonschema": "^1.4.1",
     "xml2js": "^0.6.2"
   }
 }
