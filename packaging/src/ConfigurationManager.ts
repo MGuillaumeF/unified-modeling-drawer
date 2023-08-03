@@ -6,18 +6,40 @@ export interface Configuration {
   language : string;
 }
 
+export class ConfigurationError extends Error {
+ constructor(message : string, options ?: {cause : Error}) {
+   super(message, options);
+ }
+}
+
 
 export default class ConfigurationManager {
   private _filepath : string;
   private _configuration : Configuration = { language : "fr"};
   private static _instance : ConfigurationManager | null = null;
-  private constructor(filename ?: string) {
-    this._filepath = filename !== undefined ? path.resolve(__dirname, filename) : path.resolve(__dirname, "configuration.json")
-    const configurationFileContent = JSON.parse(readFileSync(this._filepath).toString());
-    if (ConfigurationManager.isValid(configurationFileContent)) {
-      this._configuration = configurationFileContent;
-    } else {
-      throw new Error("invalid configuration file content")
+  private constructor(params ?: {filename ?: string; strict?: boolean; onError ?: (error : ConfigurationError) => void}) {
+    this._filepath = params?.filename !== undefined ? path.resolve(__dirname, params?.filename) : path.resolve(__dirname, "configuration.json")
+    try {
+      const configurationFileContent = JSON.parse(readFileSync(this._filepath).toString());
+      if (ConfigurationManager.isValid(configurationFileContent)) {
+        this._configuration = configurationFileContent;
+      } else {
+        const error new ConfigurationError("invalid configuration file content");
+        if (params?.onError) {
+          params.onError(error);
+        }
+        if (params?.strict) {
+          throw error;
+        }
+      }
+    } catch (e) {
+      const error new ConfigurationError("invalid configuration file reading", {cause : e});
+      if (params?.onError) {
+        params.onError(error);
+      }
+      if (params?.strict) {
+        throw error;
+      }
     }
   }
   public static getInstance(filename ?: string) : ConfigurationManager  {
