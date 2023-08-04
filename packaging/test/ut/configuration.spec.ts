@@ -3,7 +3,7 @@ import ConfigurationManager, { ConfigurationError } from "../../src/Configuratio
 import path from "path";
 import { existsSync, writeFileSync, unlinkSync } from "fs";
 
-const INVALID_JSON_CONFIG = path.resolve(__dirname, ".invalid-configuration.json");
+const INVALID_JSON_CONFIG = path.resolve(process.cwd(), ".invalid-configuration.json");
 
 describe("ConfigurationManager Test Suite", function () {
   it("Call instance with not existing file in strict mode", function () {
