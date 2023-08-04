@@ -1,0 +1,7 @@
+{
+  "reporterEnabled": "spec, mocha-sonarqube-reporter",
+  "mochaSonarqubeReporterReporterOptions": {
+    "output": "./reports/test-results.xml",
+    "useFullFilePath": true
+  }
+}

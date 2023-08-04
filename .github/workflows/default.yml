@@ -111,10 +111,14 @@ jobs:
           name: UMD-distribution-linux
           path: ${{github.workspace}}/dist
         
-      # - name: Tests
-      #   working-directory: ${{github.workspace}}
-      #   run: npm test
-
+      - name: Run Tests
+        working-directory: ${{github.workspace}}
+        run: npm run unit:test:packaging
+        
+      - name: Print summary coverage
+        working-directory: ${{github.workspace}}
+        run: npx nyc report --reporter=lcov --reporter=text-summary
+      
       - name: ESlint analyze json
         working-directory: ${{github.workspace}}
         run: npm run lint:eslint:json || echo FAILED
