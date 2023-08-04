@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import ConfigurationManager, { ConfigurationError } from "../../src/ConfigurationManager";
 import path from "path";
-import { existsSync, writeFileSync, unlinkFileSync } from "fs";
+import { existsSync, writeFileSync, unlinkSync } from "fs";
 
 const INVALID_JSON_CONFIG = path.resolve(__dirname, ".invalid-configuration.json");
 
@@ -29,7 +29,7 @@ describe("ConfigurationManager Test Suite", function () {
   it("Call instance with existing bad json file in strict mode", function () {
     before(() => {
       writeFileSync(INVALID_JSON_CONFIG, JSON.stringify({content : "no language"}, null, 2))
-    ));
+    });
     expect(function(){
       try {
         ConfigurationManager.getInstance({filename : "notExist", strict : true});
@@ -50,7 +50,7 @@ describe("ConfigurationManager Test Suite", function () {
     }).to.throw('invalid configuration file content');
     after(() => {
       if (existsSync(INVALID_JSON_CONFIG) {
-        unlinkFileSync(INVALID_JSON_CONFIG)
+        unlinkSync(INVALID_JSON_CONFIG)
       }
     });
   });
