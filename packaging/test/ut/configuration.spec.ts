@@ -11,16 +11,18 @@ describe("ConfigurationManager Test Suite", function () {
       try {
         ConfigurationManager.getInstance({filename : "notExist", strict : true});
       } catch (e) {
-        console.error("error raised", e);
+        // console.error("error raised", e);
 
         expect(e instanceof ConfigurationError).to.equal(
           true,
           "Test error is congiguration manager error instance"
         );
         if (e instanceof ConfigurationError) {
+          /*
           console.error("error message", e.message);
           console.error("error stack", e.stack);
           console.error("error string", e.toString());
+          */
         }
         throw e;
       }
