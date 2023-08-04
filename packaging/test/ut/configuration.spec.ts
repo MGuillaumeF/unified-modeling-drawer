@@ -27,13 +27,10 @@ describe("ConfigurationManager Test Suite", function () {
     }).to.throw('invalid configuration file reading');
   });
   it("Call instance with existing bad json file in strict mode", function () {
-    before(() => {
-      writeFileSync(INVALID_JSON_CONFIG, JSON.stringify({content : "no language"}, null, 2))
-      console.log(readFileSync(INVALID_JSON_CONFIG).toString());
-    });
+    writeFileSync(INVALID_JSON_CONFIG, JSON.stringify({content : "no language"}, null, 2))
+    console.info(readFileSync(INVALID_JSON_CONFIG).toString());
     expect(function(){
       try {
-        console.log(INVALID_JSON_CONFIG);
         ConfigurationManager.getInstance({filename : INVALID_JSON_CONFIG, strict : true});
       } catch (e) {
         console.error("error raised", e);
@@ -50,10 +47,8 @@ describe("ConfigurationManager Test Suite", function () {
         throw e;
       }
     }).to.throw('invalid configuration file content');
-    after(() => {
-      if (existsSync(INVALID_JSON_CONFIG)) {
-        unlinkSync(INVALID_JSON_CONFIG)
-      }
-    });
+    if (existsSync(INVALID_JSON_CONFIG)) {
+      unlinkSync(INVALID_JSON_CONFIG)
+    }
   });
 });
