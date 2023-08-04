@@ -49,7 +49,7 @@ describe("ConfigurationManager Test Suite", function () {
       }
     }).to.throw('invalid configuration file content');
     after(() => {
-      if (existsSync(INVALID_JSON_CONFIG) {
+      if (existsSync(INVALID_JSON_CONFIG)) {
         unlinkSync(INVALID_JSON_CONFIG)
       }
     });
