@@ -55,6 +55,7 @@ export default class ConfigurationManager {
         this._onError(error);
     }
     if (this._strict) {
+        this._instance = null;
         throw error;
     }
   }
