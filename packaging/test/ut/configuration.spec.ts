@@ -6,12 +6,6 @@ import { existsSync, writeFileSync, unlinkSync } from "fs";
 const INVALID_JSON_CONFIG = path.resolve(process.cwd(), ".invalid-configuration.json");
 
 describe("ConfigurationManager Test Suite", function () {
-  beforeEach(() => {
-      delete ConfigurationManager.getInstance();
-    });
-  afterEach(() => {
-      delete ConfigurationManager.getInstance();
-    });
   it("Call instance with not existing file in strict mode", function () {
     expect(function(){
       try {
