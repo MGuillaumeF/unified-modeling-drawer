@@ -3,7 +3,7 @@ import ConfigurationManager, { ConfigurationError } from "../../src/Configuratio
 import path from "path";
 import { existsSync, writeFileSync, unlinkSync, readFileSync } from "fs";
 
-const INVALID_JSON_CONFIG = path.resolve(process.cwd(), ".invalid-configuration.json");
+const INVALID_JSON_CONFIG = path.resolve(process.cwd(), "invalid_configuration.json");
 
 describe("ConfigurationManager Test Suite", function () {
   it("Call instance with not existing file in strict mode", function () {
@@ -28,7 +28,7 @@ describe("ConfigurationManager Test Suite", function () {
   });
   it("Call instance with existing bad json file in strict mode", function () {
     writeFileSync(INVALID_JSON_CONFIG, JSON.stringify({content : "no language"}, null, 2))
-    console.info(readFileSync(INVALID_JSON_CONFIG).toString());
+    console.info("test file used is :", INVALID_JSON_CONFIG, "with content :", readFileSync(INVALID_JSON_CONFIG).toString());
     expect(function(){
       try {
         ConfigurationManager.getInstance({filename : INVALID_JSON_CONFIG, strict : true});
