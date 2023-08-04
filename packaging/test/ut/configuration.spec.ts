@@ -29,21 +29,22 @@ describe("ConfigurationManager Test Suite", function () {
   it("Call instance with existing bad json file in strict mode", function () {
     before(() => {
       writeFileSync(INVALID_JSON_CONFIG, JSON.stringify({content : "no language"}, null, 2))
+      console.info("test file used is :", INVALID_JSON_CONFIG, "with content :", readFileSync(INVALID_JSON_CONFIG).toString());
     });
     expect(function(){
       try {
         ConfigurationManager.getInstance({filename : INVALID_JSON_CONFIG, strict : true});
       } catch (e) {
-        console.error("error raised", e);
+       // console.error("error raised", e);
 
         expect(e instanceof ConfigurationError).to.equal(
           true,
           "Test error is congiguration manager error instance"
         );
         if (e instanceof ConfigurationError) {
-          console.error("error message", e.message);
-          console.error("error stack", e.stack);
-          console.error("error string", e.toString());
+       //   console.error("error message", e.message);
+      //    console.error("error stack", e.stack);
+       //   console.error("error string", e.toString());
           if (e?.cause instanceof Error) {
             throw e.cause;
           }
