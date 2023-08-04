@@ -44,8 +44,10 @@ describe("ConfigurationManager Test Suite", function () {
           console.error("error message", e.message);
           console.error("error stack", e.stack);
           console.error("error string", e.toString());
+          if (e?.cause instanceof Error) {
+            throw e.cause;
+          }
         }
-        throw e.cause;
       }
     }).to.throw('invalid configuration file content');
     after (() => {
