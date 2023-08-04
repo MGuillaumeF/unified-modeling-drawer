@@ -21,7 +21,7 @@ export default class ConfigurationManager {
   private _onError ?: (error : ConfigurationError) => void;
   private static _instance : ConfigurationManager | null = null;
   private constructor(params ?: ConfigurationManagerParams ) {
-    this._filepath = path.resolve(process.cwd(), params?.filename !== undefined ? params.filename : "configuration.json");
+    this._filepath = path.resolve(process.cwd(), params?.filename ?  params?.filename : "configuration.json") 
     this._strict = params?.strict ?? false;
     this._onError = params?.onError;
     try {
@@ -44,7 +44,7 @@ export default class ConfigurationManager {
     }
   }
   public static getInstance(params ?: ConfigurationManagerParams) : ConfigurationManager  {
-    if (this._instance === null) {
+    if (this._instance === null || params !== undefined) {
       this._instance = new ConfigurationManager(params)
     }
     return this._instance;
