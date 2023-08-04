@@ -32,7 +32,7 @@ describe("ConfigurationManager Test Suite", function () {
     });
     expect(function(){
       try {
-        ConfigurationManager.getInstance({filename : INVALID_JSON_CONFIG, strict : true});
+        ConfigurationManager.getInstance({filename : ".invalid-configuration.json", strict : true});
       } catch (e) {
         console.error("error raised", e);
 
