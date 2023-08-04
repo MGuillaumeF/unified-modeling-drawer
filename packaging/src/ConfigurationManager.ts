@@ -21,7 +21,7 @@ export default class ConfigurationManager {
   private _onError ?: (error : ConfigurationError) => void;
   private static _instance : ConfigurationManager | null = null;
   private constructor(params ?: ConfigurationManagerParams ) {
-    this._filepath = params?.filename !== undefined ? path.resolve(__dirname, params?.filename) : path.resolve(__dirname, "configuration.json")
+    this._filepath = params?.filename !== undefined ? params.filename : "configuration.json";
     this._strict = params?.strict ?? false;
     this._onError = params?.onError;
     try {
