@@ -33,7 +33,7 @@ export default class ConfigurationManager {
           this.manageError(new ConfigurationError("invalid configuration file content"));
         }
       } else if (params?.filename) {
-        this.manageError(new ConfigurationError("configuration file not found"))
+        this.manageError(new ConfigurationError(`configuration file not found: ${this._filepath}`))
       }
     } catch (e) {
       let option : {cause : Error} | undefined;
