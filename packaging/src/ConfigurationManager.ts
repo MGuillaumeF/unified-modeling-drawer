@@ -50,7 +50,7 @@ export default class ConfigurationManager {
     return this._instance;
   }
 
-  public get configuration() : Configuration {
+  public get configuration() : Readonly<Configuration> {
     return this._configuration;
   }
 
