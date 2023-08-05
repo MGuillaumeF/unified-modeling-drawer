@@ -21,7 +21,7 @@ export default class ConfigurationManager {
   private _onError ?: (error : ConfigurationError) => void;
   private static _instance : ConfigurationManager | null = null;
   private constructor(params ?: ConfigurationManagerParams ) {
-    this._filepath = params?.filename !== undefined ? path.resolve(__dirname, params?.filename) : path.resolve(__dirname, "configuration.json")
+    this._filepath = path.resolve(process.cwd(), params?.filename ?  params?.filename : "configuration.json") 
     this._strict = params?.strict ?? false;
     this._onError = params?.onError;
     try {
@@ -33,7 +33,7 @@ export default class ConfigurationManager {
           this.manageError(new ConfigurationError("invalid configuration file content"));
         }
       } else if (params?.filename) {
-        this.manageError(new ConfigurationError("configuration file not found"))
+        this.manageError(new ConfigurationError(`configuration file not found: ${this._filepath}`))
       }
     } catch (e) {
       let option : {cause : Error} | undefined;
@@ -44,7 +44,7 @@ export default class ConfigurationManager {
     }
   }
   public static getInstance(params ?: ConfigurationManagerParams) : ConfigurationManager  {
-    if (this._instance === null) {
+    if (this._instance === null || params !== undefined) {
       this._instance = new ConfigurationManager(params)
     }
     return this._instance;
@@ -55,6 +55,7 @@ export default class ConfigurationManager {
         this._onError(error);
     }
     if (this._strict) {
+        ConfigurationManager._instance = null;
         throw error;
     }
   }

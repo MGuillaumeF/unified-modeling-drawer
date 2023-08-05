@@ -1,26 +1,45 @@
 import { expect } from "chai";
 import ConfigurationManager, { ConfigurationError } from "../../src/ConfigurationManager";
+import path from "path";
+import { existsSync, writeFileSync, unlinkSync, readFileSync } from "fs";
+
+const INVALID_JSON_CONFIG = path.resolve(process.cwd(), "invalid_configuration.json");
 
 describe("ConfigurationManager Test Suite", function () {
   it("Call instance with not existing file in strict mode", function () {
-    try {
-      ConfigurationManager.getInstance({filename : "notExist", strict : true});
-    } catch (e) {
-      console.error("error raised", e);
-
-      expect(e instanceof ConfigurationError).to.equal(
-        true,
-        "Test error is congiguration manager error instance"
-      );
-      if (e instanceof ConfigurationError) {
-        console.error("error message", e.message);
-        console.error("error stack", e.stack);
-        console.error("error string", e.toString());
-        expect(e.message).to.equal(
-          "invalid configuration file reading",
-          "test message of custom error"
+    expect(function(){
+      try {
+        ConfigurationManager.getInstance({filename : "notExist", strict : true});
+      } catch (e) {
+        expect(e instanceof ConfigurationError).to.equal(
+          true,
+          "Test error is congiguration manager error instance"
         );
+        if (e instanceof ConfigurationError) {
+          throw e;
+        }
       }
+    }).to.throw('invalid configuration file reading');
+  });
+  it("Call instance with existing bad json file in strict mode", function () {
+    writeFileSync(INVALID_JSON_CONFIG, JSON.stringify({content : "no language"}, null, 2))
+    expect(function(){
+      try {
+        ConfigurationManager.getInstance({filename : INVALID_JSON_CONFIG, strict : true});
+      } catch (e) {
+        expect(e instanceof ConfigurationError).to.equal(
+          true,
+          "Test error is congiguration manager error instance"
+        );
+        if (e instanceof ConfigurationError) {
+          if (e?.cause instanceof Error) {
+            throw e.cause;
+          }
+        }
+      }
+    }).to.throw('invalid configuration file content');
+    if (existsSync(INVALID_JSON_CONFIG)) {
+      unlinkSync(INVALID_JSON_CONFIG)
     }
   });
 });
