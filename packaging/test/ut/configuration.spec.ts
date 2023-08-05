@@ -16,6 +16,15 @@ describe("ConfigurationManager Test Suite", function () {
           "Test error is congiguration manager error instance"
         );
         if (e instanceof ConfigurationError) {
+          expect(e?.cause instanceof ConfigurationError).to.equal(
+          true,
+            "Test cause error is congiguration manager error instance"
+          );
+          if (e?.cause instanceof ConfigurationError) {
+            expect(function(){
+              throw e.cause;
+            }).to.throw(`configuration file not found: ${path.resolve(process.cwd(), "notExist")}`);
+          }
           throw e;
         }
       }
@@ -32,7 +41,11 @@ describe("ConfigurationManager Test Suite", function () {
           "Test error is congiguration manager error instance"
         );
         if (e instanceof ConfigurationError) {
-          if (e?.cause instanceof Error) {
+          expect(e?.cause instanceof ConfigurationError).to.equal(
+          true,
+            "Test cause error is congiguration manager error instance"
+          );
+          if (e?.cause instanceof ConfigurationError) {
             throw e.cause;
           }
         }
