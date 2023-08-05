@@ -11,28 +11,18 @@ describe("ConfigurationManager Test Suite", function () {
       try {
         ConfigurationManager.getInstance({filename : "notExist", strict : true});
       } catch (e) {
-        // console.error("error raised", e);
-
         expect(e instanceof ConfigurationError).to.equal(
           true,
           "Test error is congiguration manager error instance"
         );
         if (e instanceof ConfigurationError) {
-          /*
-          console.error("error message", e.message);
-          console.error("error stack", e.stack);
-          console.error("error string", e.toString());
-          */
+          throw e;
         }
-        throw e;
       }
     }).to.throw('invalid configuration file reading');
   });
   it("Call instance with existing bad json file in strict mode", function () {
-    //before(() => {
-      writeFileSync(INVALID_JSON_CONFIG, JSON.stringify({content : "no language"}, null, 2))
-      console.info("test file used is :", INVALID_JSON_CONFIG, "with content :", readFileSync(INVALID_JSON_CONFIG).toString());
-    //});
+    writeFileSync(INVALID_JSON_CONFIG, JSON.stringify({content : "no language"}, null, 2))
     expect(function(){
       try {
         ConfigurationManager.getInstance({filename : INVALID_JSON_CONFIG, strict : true});
@@ -44,19 +34,14 @@ describe("ConfigurationManager Test Suite", function () {
           "Test error is congiguration manager error instance"
         );
         if (e instanceof ConfigurationError) {
-       //   console.error("error message", e.message);
-      //    console.error("error stack", e.stack);
-       //   console.error("error string", e.toString());
           if (e?.cause instanceof Error) {
             throw e.cause;
           }
         }
       }
     }).to.throw('invalid configuration file content');
-    after (() => {
-      if (existsSync(INVALID_JSON_CONFIG)) {
-        unlinkSync(INVALID_JSON_CONFIG)
-      }
-    })
+    if (existsSync(INVALID_JSON_CONFIG)) {
+      unlinkSync(INVALID_JSON_CONFIG)
+    }
   });
 });
