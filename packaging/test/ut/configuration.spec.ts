@@ -4,6 +4,8 @@ import path from "path";
 import { existsSync, writeFileSync, unlinkSync, readFileSync } from "fs";
 
 const INVALID_JSON_CONFIG = path.resolve(process.cwd(), "invalid_configuration.json");
+const VALID_JSON_CONFIG = path.resolve(process.cwd(), "invalid_configuration.json");
+
 
 describe("ConfigurationManager Test Suite", function () {
   it("Call instance with not existing file in strict mode", function () {
@@ -54,6 +56,17 @@ describe("ConfigurationManager Test Suite", function () {
     }).to.throw('invalid configuration file content');
     if (existsSync(INVALID_JSON_CONFIG)) {
       unlinkSync(INVALID_JSON_CONFIG)
+    }
+  });
+  it("Call instance with existing json file", function () {
+    writeFileSync(VALID_JSON_CONFIG, JSON.stringify({language : "en"}, null, 2))
+    const configurationManager = ConfigurationManager.getInstance({filename : VALID_JSON_CONFIG});
+    expect(configurationManager.configuration.language.).to.equal(
+          "en",
+          "Test language configuration"
+        );
+    if (existsSync(VALID_JSON_CONFIG)) {
+      unlinkSync(VALID_JSON_CONFIG)
     }
   });
 });
