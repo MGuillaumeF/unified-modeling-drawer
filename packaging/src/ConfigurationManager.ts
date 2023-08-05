@@ -50,6 +50,10 @@ export default class ConfigurationManager {
     return this._instance;
   }
 
+  public get configuration() : Configuration {
+    return this._configuration;
+  }
+
   private manageError(error : ConfigurationError) : void {
     if (this._onError) {
         this._onError(error);
