@@ -21,8 +21,9 @@ describe("ConfigurationManager Test Suite", function () {
             "Test cause error is congiguration manager error instance"
           );
           if (e?.cause instanceof ConfigurationError) {
+            const cause :ConfigurationError = e?.cause;
             expect(function(){
-              throw e.cause;
+              throw cause;
             }).to.throw(`configuration file not found: ${path.resolve(process.cwd(), "notExist")}`);
           }
           throw e;
