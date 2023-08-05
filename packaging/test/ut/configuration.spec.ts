@@ -27,8 +27,6 @@ describe("ConfigurationManager Test Suite", function () {
       try {
         ConfigurationManager.getInstance({filename : INVALID_JSON_CONFIG, strict : true});
       } catch (e) {
-       // console.error("error raised", e);
-
         expect(e instanceof ConfigurationError).to.equal(
           true,
           "Test error is congiguration manager error instance"
