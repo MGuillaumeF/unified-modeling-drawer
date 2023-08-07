@@ -111,9 +111,7 @@ jobs:
          git config user.email "${{secrets.EMAIL}}"
          git add . || echo "No modification to add pop"
          (git commit -m "[AUTO] prettier format write" && git push) || echo 'No modification to save'
-        env:
-         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
+         
       - name: Build App
         working-directory: ${{github.workspace}}
         run: npm run build:app
