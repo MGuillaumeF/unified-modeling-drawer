@@ -88,7 +88,7 @@ module.exports = (env, args) => {
 
   const config = {
     mode: MODE,
-    entry:  "./src/index.tsx",
+    entry: "./src/index.tsx",
     cache: false,
     output: {
       path: path.resolve(__dirname, "build"),
