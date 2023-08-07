@@ -9,11 +9,8 @@ on:
       - main
       - develop
       - delivery
-
-permissions: write-all
-
+      
 jobs:
-
   clear:
     runs-on: ubuntu-latest
     name: A job to delete old workflow runs
@@ -57,6 +54,7 @@ jobs:
         
   sonarcloud-analyse:
     runs-on: ubuntu-latest
+    permissions: write
     steps:
       - uses: actions/checkout@v2
         with:
