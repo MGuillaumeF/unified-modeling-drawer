@@ -8,7 +8,7 @@
 >
   <path
     d="M250 10 L470 120 L470 380 L250 490 L30 380 L30 120 Z"
-    fill="#0D6AAA"
+    fill="#0D6AC1"
   />
   <path d="M250 10 L30 120 30 380 L250 490 Z" fill="#F07427" />
   <circle cx="250" cy="250" r="160" fill="white" />
