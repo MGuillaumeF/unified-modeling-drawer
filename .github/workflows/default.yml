@@ -110,6 +110,7 @@ jobs:
          git config user.name "MGuillaumeF"
          git config user.email "${{secrets.EMAIL}}"
          git add . || echo "No modification to add pop"
+         git reset .github || echo "No modification to reset"
          (git commit -m "[AUTO] prettier format write" && git push) || echo 'No modification to save'
          
       - name: Build App
