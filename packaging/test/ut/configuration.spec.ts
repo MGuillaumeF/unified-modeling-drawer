@@ -60,6 +60,7 @@ describe("ConfigurationManager Test Suite", function () {
   });
   it("Call instance with existing json file", function () {
     writeFileSync(VALID_JSON_CONFIG, JSON.stringify({language : "en"}, null, 2))
+    // default configuration
         expect(ConfigurationManager.getInstance().configuration.language).to.equal(
           "fr",
           "Test language configuration"
