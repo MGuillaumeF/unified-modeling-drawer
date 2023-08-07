@@ -2,9 +2,7 @@ import { BrowserWindow, ipcMain } from "electron";
 import { t } from "i18next";
 import { join as pathJoin } from "path";
 
-export default function NewModelWindow(
-  parent: BrowserWindow
-): void {
+export default function NewModelWindow(parent: BrowserWindow): void {
   // Création de la fenêtre navigateur Chromium
   const win = new BrowserWindow({
     modal: true,

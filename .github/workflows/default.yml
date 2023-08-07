@@ -9,11 +9,8 @@ on:
       - main
       - develop
       - delivery
-
-permissions: write-all
-
+      
 jobs:
-
   clear:
     runs-on: ubuntu-latest
     name: A job to delete old workflow runs
@@ -57,6 +54,7 @@ jobs:
         
   sonarcloud-analyse:
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - uses: actions/checkout@v2
         with:
@@ -112,10 +110,9 @@ jobs:
          git config user.name "MGuillaumeF"
          git config user.email "${{secrets.EMAIL}}"
          git add . || echo "No modification to add pop"
+         git reset .github || echo "No modification to reset"
          (git commit -m "[AUTO] prettier format write" && git push) || echo 'No modification to save'
-        env:
-         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
+         
       - name: Build App
         working-directory: ${{github.workspace}}
         run: npm run build:app

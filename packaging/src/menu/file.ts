@@ -124,10 +124,10 @@ function saveAs(modelToSave: ModelObject) {
       const { filePath } = fileObj;
       if (!fileObj.canceled && filePath) {
         modelToSave.sourcePath = filePath;
-        const modelToSaveFilled : Required<IModelObject> = {
+        const modelToSaveFilled: Required<IModelObject> = {
           ...modelToSave.toObject(),
           sourcePath: filePath
-        }
+        };
         save(modelToSaveFilled);
       }
     })
