@@ -65,6 +65,10 @@ describe("ConfigurationManager Test Suite", function () {
           "en",
           "Test language configuration"
         );
+    expect(ConfigurationManager.getInstance().configuration.language).to.equal(
+          "en",
+          "Test language configuration"
+        );
     if (existsSync(VALID_JSON_CONFIG)) {
       unlinkSync(VALID_JSON_CONFIG)
     }
