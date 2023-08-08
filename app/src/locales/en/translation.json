@@ -1,0 +1,31 @@
+{
+  "FORMS": {
+    "NEW": {
+      "INPUTS": {
+        "NAME": {
+          "PLACEHOLDER": "Name of model"
+        },
+        "DESCRIPTION": {
+          "PLACEHOLDER": "Description of model"
+        },
+        "SUBMIT_BUTTON": "Create"
+      }
+    }
+  },
+  "RULES": {
+    "FIELDS": {
+      "MANDATORY": "The field {{name}} must be complete",
+      "MIN_SIZE": "The value must be greater than {{min}}",
+      "MAX_SIZE": "The value must be lower than {{max}}",
+      "RANGE": "The value must be between {{min}} and {{max}}"
+    }
+  },
+  "ERRORS": {
+    "ACCESS_DENIED": "Access denied"
+  },
+  "QUESTION": {
+    "CONFIRM": {
+      "DELETE_OBJECT": "Are you sure you want to delete the object {{objectName}}"
+    }
+  }
+}

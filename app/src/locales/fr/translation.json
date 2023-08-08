@@ -1,0 +1,31 @@
+{
+  "FORMS": {
+    "NEW": {
+      "INPUTS": {
+        "NAME": {
+          "PLACEHOLDER": "Nom du modèle"
+        },
+        "DESCRIPTION": {
+          "PLACEHOLDER": "Description du modèle"
+        },
+        "SUBMIT_BUTTON": "Créer"
+      }
+    }
+  },
+  "RULES": {
+    "FIELDS": {
+      "MANDATORY": "Le champ {{name}} doit être saisie",
+      "MIN_SIZE": "La valeur doit être supérieur à {{min}}",
+      "MAX_SIZE": "La valeur doit être inférieur à {{max}}",
+      "RANGE": "La valeur doit être comprise entre {{min}} et {{max}}"
+    }
+  },
+  "ERRORS": {
+    "ACCESS_DENIED": "Accès non-autorisé"
+  },
+  "QUESTION": {
+    "CONFIRM": {
+      "DELETE_OBJECT": "Êtes-vous sûr de vouloir supprimer l'objet {{objectName}}"
+    }
+  }
+}

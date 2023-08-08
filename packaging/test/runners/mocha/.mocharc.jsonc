@@ -1,0 +1,7 @@
+{
+  "require": [
+    "packaging/test/runners/mocha/init.mjs",
+    "source-map-support/register"
+  ],
+  "spec": ["packaging/test/ut/**/*.spec.ts"]
+}

@@ -37,6 +37,8 @@ bower_components
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
+app/build
+packaging/build
 
 # Dependency directories
 node_modules/
@@ -50,6 +52,8 @@ web_modules/
 
 # Optional npm cache directory
 .npm
+# testing
+/coverage
 
 # Optional eslint cache
 .eslintcache
@@ -68,9 +72,6 @@ web_modules/
 
 # Output of 'npm pack'
 *.tgz
-
-# Yarn Integrity file
-.yarn-integrity
 
 # dotenv environment variable files
 .env
@@ -121,6 +122,9 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+.nyc_output
+cypress/reports
+cypress/videos
 
 # yarn v2
 .yarn/cache
@@ -128,3 +132,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+cypress.config.js
+cypress/support/commands.js
+cypress/support/e2e.js
+
+.model

@@ -1,0 +1,118 @@
+{
+  "MENU": {
+    "FILE": {
+      "LABEL": "File",
+      "SUBMENU": {
+        "NEW": {
+          "LABEL": "New",
+          "WINDOW": {
+            "TITLE": "Create new Model"
+          }
+        },
+        "OPEN": {
+          "LABEL": "Open"
+        },
+        "SAVE": {
+          "LABEL": "Save"
+        },
+        "SAVE_AS": {
+          "LABEL": "Save as..."
+        },
+        "EXPORT_AS": {
+          "LABEL": "Export as..."
+        },
+        "EXIT": {
+          "LABEL": "Exit"
+        }
+      }
+    },
+    "EDIT": {
+      "LABEL": "Edit",
+      "SUBMENU": {
+        "UNDO": {
+          "LABEL": "Undo"
+        },
+        "REDO": {
+          "LABEL": "Redo"
+        },
+        "CUT": {
+          "LABEL": "Cut"
+        },
+        "COPY": {
+          "LABEL": "Copy"
+        },
+        "PASTE": {
+          "LABEL": "Paste"
+        },
+        "DELETE": {
+          "LABEL": "Delete"
+        },
+        "SELECT_ALL": {
+          "LABEL": "Select all"
+        }
+      }
+    },
+    "VIEW": {
+      "LABEL": "View",
+      "SUBMENU": {
+        "RELOAD": {
+          "LABEL": "Reload"
+        },
+        "FORCE_RELOAD": {
+          "LABEL": "Force reload"
+        },
+        "TOGGLE_DEV_TOOLS": {
+          "LABEL": "Dev Tools"
+        },
+        "RESET_ZOOM": {
+          "LABEL": "Reset Zoom"
+        },
+        "ZOOM_IN": {
+          "LABEL": "Zoom +"
+        },
+        "ZOOM_OUT": {
+          "LABEL": "Zoom -"
+        },
+        "TOGGLE_FULL_SCREEN": {
+          "LABEL": "Full screen"
+        },
+        "LANGUAGE": {
+          "LABEL": "Language",
+          "SUBMENU": {
+            "FR": {
+              "LABEL": "French (FR)"
+            },
+            "EN": {
+              "LABEL": "English (US)"
+            }
+          }
+        }
+      }
+    },
+    "WINDOW": {
+      "LABEL": "Window",
+      "SUBMENU": {
+        "MINIMIZE": {
+          "LABEL": "Minimize"
+        },
+        "CLOSE": {
+          "LABEL": "Exit"
+        }
+      }
+    },
+    "HELP": {
+      "LABEL": "Help",
+      "SUBMENU": {
+        "CONTACT": {
+          "LABEL": "Contact"
+        },
+        "DOCUMENTATION": {
+          "LABEL": "Documentation"
+        },
+        "ABOUT": {
+          "LABEL": "About"
+        }
+      }
+    }
+  }
+}

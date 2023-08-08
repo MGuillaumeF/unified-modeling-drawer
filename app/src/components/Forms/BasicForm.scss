@@ -1,0 +1,8 @@
+form.BasicForm {
+  fieldset {
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.25em;
+    gap: 0.5em;
+  }
+}

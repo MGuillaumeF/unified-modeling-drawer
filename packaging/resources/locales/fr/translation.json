@@ -1,0 +1,118 @@
+{
+  "MENU": {
+    "FILE": {
+      "LABEL": "Fichier",
+      "SUBMENU": {
+        "NEW": {
+          "LABEL": "Nouveau",
+          "WINDOW": {
+            "TITLE": "Créer un nouveau Modèle"
+          }
+        },
+        "OPEN": {
+          "LABEL": "Ouvrir"
+        },
+        "SAVE": {
+          "LABEL": "Sauvegarder"
+        },
+        "SAVE_AS": {
+          "LABEL": "Sauvegarder sous..."
+        },
+        "EXPORT_AS": {
+          "LABEL": "Exporter en tant que..."
+        },
+        "EXIT": {
+          "LABEL": "Quitter"
+        }
+      }
+    },
+    "EDIT": {
+      "LABEL": "Édition",
+      "SUBMENU": {
+        "UNDO": {
+          "LABEL": "Précédent"
+        },
+        "REDO": {
+          "LABEL": "Suivant"
+        },
+        "CUT": {
+          "LABEL": "Couper"
+        },
+        "COPY": {
+          "LABEL": "Copier"
+        },
+        "PASTE": {
+          "LABEL": "Coller"
+        },
+        "DELETE": {
+          "LABEL": "Supprimer"
+        },
+        "SELECT_ALL": {
+          "LABEL": "Sélectionner tout"
+        }
+      }
+    },
+    "VIEW": {
+      "LABEL": "Affichage",
+      "SUBMENU": {
+        "RELOAD": {
+          "LABEL": "Recharger"
+        },
+        "FORCE_RELOAD": {
+          "LABEL": "Forcer la recharge"
+        },
+        "TOGGLE_DEV_TOOLS": {
+          "LABEL": "Outils de développement"
+        },
+        "RESET_ZOOM": {
+          "LABEL": "Zoom par défaut"
+        },
+        "ZOOM_IN": {
+          "LABEL": "Zoom +"
+        },
+        "ZOOM_OUT": {
+          "LABEL": "Zoom -"
+        },
+        "TOGGLE_FULL_SCREEN": {
+          "LABEL": "Plein écran"
+        },
+        "LANGUAGE": {
+          "LABEL": "Langue",
+          "SUBMENU": {
+            "FR": {
+              "LABEL": "Français (FR)"
+            },
+            "EN": {
+              "LABEL": "Anglais (US)"
+            }
+          }
+        }
+      }
+    },
+    "WINDOW": {
+      "LABEL": "Fenêtre",
+      "SUBMENU": {
+        "MINIMIZE": {
+          "LABEL": "Minimiser"
+        },
+        "CLOSE": {
+          "LABEL": "Quitter"
+        }
+      }
+    },
+    "HELP": {
+      "LABEL": "Aide",
+      "SUBMENU": {
+        "CONTACT": {
+          "LABEL": "Contact"
+        },
+        "DOCUMENTATION": {
+          "LABEL": "Documentation"
+        },
+        "ABOUT": {
+          "LABEL": "A propos"
+        }
+      }
+    }
+  }
+}
