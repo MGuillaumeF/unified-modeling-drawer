@@ -1,13 +1,19 @@
 export type Visibility = "private" | "protected" | "public";
 
+export interface IAttributeModelObject {
+  name: string;
+  type: string;
+  visibility: Visibility;
+}
 export default class AttributeModelObject {
   private _name: string;
   private _type: string;
   private _visibility: Visibility;
-  constructor(name: string, type: string, visibility: Visibility) {
-    this._name = name;
-    this._type = type;
-    this._visibility = visibility;
+
+  constructor(params: IAttributeModelObject) {
+    this._name = params.name;
+    this._type = params.type;
+    this._visibility = params.visibility;
   }
   public get type(): string {
     return this._type;
@@ -26,5 +32,18 @@ export default class AttributeModelObject {
   }
   public set name(name: string) {
     this._name = name;
+  }
+
+  public toObject(): IAttributeModelObject {
+    return {
+      name: this._name,
+      type: this._type,
+      visibility: this._visibility
+    };
+  }
+  public toPrint() {
+    return {
+      $: this.toObject()
+    };
   }
 }

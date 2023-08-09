@@ -1,3 +1,5 @@
+import ClassModelObject, { IClassModelObject } from "./ClassModelObject";
+
 export interface IModelObject {
   name: string;
   description: string;
@@ -5,6 +7,7 @@ export interface IModelObject {
   creationDate: Date;
   lastUpdateDate: Date;
   sourcePath?: string;
+  classModelObjects: IClassModelObject[];
 }
 
 export default class ModelObject {
@@ -14,22 +17,19 @@ export default class ModelObject {
   private _sourcePath?: string;
   private _creationDate: Date;
   private _lastUpdateDate: Date;
-  constructor({
-    name,
-    description,
-    version,
-    creationDate,
-    sourcePath,
-    lastUpdateDate
-  }: IModelObject) {
-    this._name = name;
-    this._description = description;
-    this._version = version;
-    this._creationDate = creationDate;
-    this._lastUpdateDate = lastUpdateDate;
-    if (sourcePath) {
-      this._sourcePath = sourcePath;
+  private _classModelObjects: ClassModelObject[] = [];
+  constructor(params: IModelObject) {
+    this._name = params.name;
+    this._description = params.description;
+    this._version = params.version;
+    this._creationDate = params.creationDate;
+    this._lastUpdateDate = params.lastUpdateDate;
+    if (params.sourcePath) {
+      this._sourcePath = params.sourcePath;
     }
+    this._classModelObjects = params.classModelObjects.map(
+      (classModelObject) => new ClassModelObject(classModelObject)
+    );
   }
   public get name(): string {
     return this._name;
@@ -71,7 +71,10 @@ export default class ModelObject {
       version: this._version,
       creationDate: this._creationDate,
       lastUpdateDate: this._lastUpdateDate,
-      sourcePath: this._sourcePath
+      sourcePath: this._sourcePath,
+      classModelObjects: this._classModelObjects.map((classModelObject) =>
+        classModelObject.toObject()
+      )
     };
   }
   public toPrint() {
@@ -80,7 +83,10 @@ export default class ModelObject {
       description: this._description,
       version: this._version,
       creationDate: this._creationDate.getTime(),
-      lastUpdateDate: this._lastUpdateDate.getTime()
+      lastUpdateDate: this._lastUpdateDate.getTime(),
+      class: this._classModelObjects.map((classModelObject) =>
+        classModelObject.toPrint()
+      )
     };
   }
 }

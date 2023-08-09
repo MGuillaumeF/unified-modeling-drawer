@@ -8,7 +8,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.on("file-open", callback);
   },
   handleChangeLanguage: (
-    callback: (event: IpcRendererEvent, ...args: any[]) => void
+    callback: (event: IpcRendererEvent, value: string) => void
   ): void => {
     ipcRenderer.on("language", callback);
   },

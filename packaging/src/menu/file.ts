@@ -2,6 +2,8 @@ import { BrowserWindow, dialog } from "electron";
 import { readFileSync, writeFileSync } from "fs";
 import { t } from "i18next";
 import { Builder, Parser } from "xml2js";
+import { IAttributeModelObject } from "../.model/AttributeModelObject";
+import ClassModelObjet from "../.model/ClassModelObject";
 import ModelObject, { IModelObject } from "../.model/ModelObject";
 import NewModelWindow from "../NewModelWindow/NewModelWindow";
 
@@ -58,7 +60,21 @@ export function getFileMenuTemplate(
                         version: result.model.version,
                         description: result.model.description,
                         lastUpdateDate: new Date(result.model.lastUpdateDate),
-                        creationDate: new Date(result.model.creationDate)
+                        creationDate: new Date(result.model.creationDate),
+                        classModelObjects: result.model.class.map(
+                          (classItem: any): ClassModelObjet =>
+                            new ClassModelObjet({
+                              name: classItem.$.name,
+                              isAbstract: classItem.$.abstract,
+                              attributes: classItem.attribute.map(
+                                (attr: any): IAttributeModelObject => ({
+                                  name: attr.$.name,
+                                  type: attr.$.type,
+                                  visibility: attr.$.visibility
+                                })
+                              )
+                            })
+                        )
                       };
                       displayedModelUpdater(win, modelObject);
                       win.webContents.send("file-open", result);

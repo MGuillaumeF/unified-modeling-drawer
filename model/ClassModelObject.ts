@@ -1,13 +1,25 @@
-import AttributeModelObject from "./AttributeModelObject";
+import AttributeModelObject, {
+  IAttributeModelObject
+} from "./AttributeModelObject";
 import DraggableModelObjet from "./DraggableModelObjet";
+
+export interface IClassModelObject {
+  name: string;
+  isAbstract: boolean;
+  attributes: IAttributeModelObject[];
+}
 
 export default class ClassModelObjet extends DraggableModelObjet {
   private _isAbstract = false;
   private _name: string;
   private _attributes: AttributeModelObject[] = [];
-  constructor(name: string) {
+  constructor(params: IClassModelObject) {
     super();
-    this._name = name;
+    this._name = params.name;
+    this._isAbstract = params.isAbstract;
+    this._attributes = params.attributes.map(
+      (attribute) => new AttributeModelObject(attribute)
+    );
   }
   public get isAbstract(): boolean {
     return this._isAbstract;
@@ -26,5 +38,21 @@ export default class ClassModelObjet extends DraggableModelObjet {
   }
   public set name(name: string) {
     this._name = name;
+  }
+  public toObject(): IClassModelObject {
+    return {
+      name: this._name,
+      isAbstract: this._isAbstract,
+      attributes: this._attributes.map((attribute) => attribute.toObject())
+    };
+  }
+  public toPrint() {
+    return {
+      $: {
+        name: this._name,
+        abstract: this._isAbstract
+      },
+      attribute: this._attributes.map((attribute) => attribute.toPrint())
+    };
   }
 }
