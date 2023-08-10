@@ -1,9 +1,10 @@
 import { BrowserWindow, dialog } from "electron";
 import { readFileSync, writeFileSync } from "fs";
 import { t } from "i18next";
+import { IStringAttributeModelObject } from "src/.model/StringAttributeModelObject";
 import { Builder, Parser } from "xml2js";
 import { IAttributeModelObject } from "../.model/AttributeModelObject";
-import ClassModelObjet from "../.model/ClassModelObject";
+import { IClassModelObject } from "../.model/ClassModelObject";
 import ModelObject, { IModelObject } from "../.model/ModelObject";
 import NewModelWindow from "../NewModelWindow/NewModelWindow";
 
@@ -56,28 +57,54 @@ export function getFileMenuTemplate(
                     function (error: Error | null, result: any): void {
                       // TODO convert to ModelObject here before send to html application
                       const modelObject: IModelObject = {
-                        name: result.model.name,
-                        version: result.model.version,
-                        description: result.model.description,
-                        lastUpdateDate: new Date(result.model.lastUpdateDate),
-                        creationDate: new Date(result.model.creationDate),
+                        name: result.model.name[0],
+                        version: result.model.version[0],
+                        description: result.model.description[0],
+                        lastUpdateDate: new Date(
+                          Number(result.model.lastUpdateDate)
+                        ),
+                        creationDate: new Date(
+                          Number(result.model.creationDate)
+                        ),
                         classModelObjects: result.model.class.map(
-                          (classItem: any): ClassModelObjet =>
-                            new ClassModelObjet({
-                              name: classItem.$.name,
-                              isAbstract: classItem.$.abstract,
-                              attributes: classItem.attribute.map(
-                                (attr: any): IAttributeModelObject => ({
+                          (classItem: any): IClassModelObject => ({
+                            name: classItem.$.name,
+                            isAbstract: classItem.$.abstract === "true",
+                            attributes: classItem.attribute.map(
+                              (
+                                attr: any
+                              ):
+                                | IAttributeModelObject
+                                | IStringAttributeModelObject => {
+                                let mapped:
+                                  | IAttributeModelObject
+                                  | IStringAttributeModelObject = {
                                   name: attr.$.name,
                                   type: attr.$.type,
+                                  mandatory: attr.$.mandatory === "true",
+                                  unique: attr.$.unique === "true",
                                   visibility: attr.$.visibility
-                                })
-                              )
-                            })
+                                };
+
+                                if (attr.$.type === "string") {
+                                  mapped = {
+                                    ...mapped,
+                                    minLength: attr.$.minLength,
+                                    maxLength: attr.$.maxLength
+                                  };
+                                  if (attr.$.pattern) {
+                                    mapped.pattern = new RegExp(attr.$.pattern);
+                                  }
+                                }
+
+                                return mapped;
+                              }
+                            )
+                          })
                         )
                       };
                       displayedModelUpdater(win, modelObject);
-                      win.webContents.send("file-open", result);
+                      win.webContents.send("file-open", modelObject);
                     }
                   );
                 }

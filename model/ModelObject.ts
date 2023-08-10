@@ -64,6 +64,12 @@ export default class ModelObject {
   public set lastUpdateDate(lastUpdateDate: Date) {
     this._lastUpdateDate = lastUpdateDate;
   }
+  public get classModelObjects(): ClassModelObject[] {
+    return this._classModelObjects;
+  }
+  public set classModelObjects(classModelObjects: ClassModelObject[]) {
+    this._classModelObjects = classModelObjects;
+  }
   public toObject(): IModelObject {
     return {
       name: this._name,

@@ -2,6 +2,7 @@ import AttributeModelObject, {
   IAttributeModelObject
 } from "./AttributeModelObject";
 import DraggableModelObjet from "./DraggableModelObjet";
+import StringAttributeModelObject from "./StringAttributeModelObject";
 
 export interface IClassModelObject {
   name: string;
@@ -9,7 +10,7 @@ export interface IClassModelObject {
   attributes: IAttributeModelObject[];
 }
 
-export default class ClassModelObjet extends DraggableModelObjet {
+export default class ClassModelObject extends DraggableModelObjet {
   private _isAbstract = false;
   private _name: string;
   private _attributes: AttributeModelObject[] = [];
@@ -17,8 +18,10 @@ export default class ClassModelObjet extends DraggableModelObjet {
     super();
     this._name = params.name;
     this._isAbstract = params.isAbstract;
-    this._attributes = params.attributes.map(
-      (attribute) => new AttributeModelObject(attribute)
+    this._attributes = params.attributes.map((attribute) =>
+      attribute.type === "string"
+        ? new StringAttributeModelObject(attribute)
+        : new AttributeModelObject(attribute)
     );
   }
   public get isAbstract(): boolean {
