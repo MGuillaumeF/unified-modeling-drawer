@@ -1,11 +1,13 @@
 import { BrowserWindow, dialog } from "electron";
 import { readFileSync, writeFileSync } from "fs";
 import { t } from "i18next";
-import { IStringAttributeModelObject } from "src/.model/StringAttributeModelObject";
 import { Builder, Parser } from "xml2js";
 import { IAttributeModelObject } from "../.model/AttributeModelObject";
 import { IClassModelObject } from "../.model/ClassModelObject";
+import { IDateAttributeModelObject } from "../.model/DateAttributeModelObject";
 import ModelObject, { IModelObject } from "../.model/ModelObject";
+import { INumberAttributeModelObject } from "../.model/NumberAttributeModelObject";
+import { IStringAttributeModelObject } from "../.model/StringAttributeModelObject";
 import NewModelWindow from "../NewModelWindow/NewModelWindow";
 
 /**
@@ -75,10 +77,14 @@ export function getFileMenuTemplate(
                                 attr: any
                               ):
                                 | IAttributeModelObject
-                                | IStringAttributeModelObject => {
+                                | IStringAttributeModelObject
+                                | INumberAttributeModelObject
+                                | IDateAttributeModelObject => {
                                 let mapped:
                                   | IAttributeModelObject
-                                  | IStringAttributeModelObject = {
+                                  | IStringAttributeModelObject
+                                  | INumberAttributeModelObject
+                                  | IDateAttributeModelObject = {
                                   name: attr.$.name,
                                   type: attr.$.type,
                                   mandatory: attr.$.mandatory === "true",
@@ -95,6 +101,38 @@ export function getFileMenuTemplate(
                                   if (attr.$.pattern) {
                                     mapped.pattern = new RegExp(attr.$.pattern);
                                   }
+                                } else if (
+                                  [
+                                    "int8",
+                                    "uint8",
+                                    "int16",
+                                    "uint16",
+                                    "int32",
+                                    "uint32",
+                                    "int64",
+                                    "uint64",
+                                    "double",
+                                    "number"
+                                  ].includes(attr.$.type)
+                                ) {
+                                  mapped = {
+                                    ...mapped,
+                                    min: attr.$.min,
+                                    max: attr.$.max
+                                  };
+                                } else if (attr.$.type === "date") {
+                                  const part: Partial<IDateAttributeModelObject> =
+                                    {};
+                                  if (attr.$.min) {
+                                    part.min = new Date(attr.$.min);
+                                  }
+                                  if (attr.$.max) {
+                                    part.max = new Date(attr.$.max);
+                                  }
+                                  mapped = {
+                                    ...mapped,
+                                    ...part
+                                  };
                                 }
 
                                 return mapped;

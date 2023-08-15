@@ -1,7 +1,9 @@
 import AttributeModelObject, {
   IAttributeModelObject
 } from "./AttributeModelObject";
+import DateAttributeModelObject from "./DateAttributeModelObject";
 import DraggableModelObjet from "./DraggableModelObjet";
+import NumberAttributeModelObject from "./NumberAttributeModelObject";
 import StringAttributeModelObject from "./StringAttributeModelObject";
 
 export interface IClassModelObject {
@@ -18,11 +20,32 @@ export default class ClassModelObject extends DraggableModelObjet {
     super();
     this._name = params.name;
     this._isAbstract = params.isAbstract;
-    this._attributes = params.attributes.map((attribute) =>
-      attribute.type === "string"
-        ? new StringAttributeModelObject(attribute)
-        : new AttributeModelObject(attribute)
-    );
+    this._attributes = params.attributes.map((attribute) => {
+      let result = new AttributeModelObject(attribute);
+      switch (attribute.type) {
+        case "string":
+          result = new StringAttributeModelObject(attribute);
+          break;
+        case "date":
+          result = new DateAttributeModelObject(attribute);
+          break;
+        case "int8":
+        case "uint8":
+        case "int16":
+        case "uint16":
+        case "int32":
+        case "uint32":
+        case "int64":
+        case "uint64":
+        case "short":
+        case "long":
+        case "double":
+        case "number":
+          result = new NumberAttributeModelObject(attribute);
+          break;
+      }
+      return result;
+    });
   }
   public get isAbstract(): boolean {
     return this._isAbstract;
