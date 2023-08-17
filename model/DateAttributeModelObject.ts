@@ -8,7 +8,9 @@ export interface IDateAttributeModelObject extends IAttributeModelObject {
 }
 export default class DateAttributeModelObject extends AttributeModelObject {
   private _parentToObject: () => IAttributeModelObject;
-  private _parentToPrint: () => any;
+  private _parentToPrint: () => {
+    $: IAttributeModelObject;
+  };
   protected _min?: Date;
   protected _max?: Date;
 
@@ -43,7 +45,6 @@ export default class DateAttributeModelObject extends AttributeModelObject {
     return {
       $: {
         ...this._parentToPrint().$,
-        ...this.toObject(),
         min: this._min ? this._min.getTime() : undefined,
         max: this._max ? this._max.getTime() : undefined
       }

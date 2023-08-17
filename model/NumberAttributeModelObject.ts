@@ -8,7 +8,9 @@ export interface INumberAttributeModelObject extends IAttributeModelObject {
 }
 export default class NumberAttributeModelObject extends AttributeModelObject {
   private _parentToObject: () => IAttributeModelObject;
-  private _parentToPrint: () => any;
+  private _parentToPrint: () => {
+    $: IAttributeModelObject;
+  };
   protected _min?: number;
   protected _max?: number;
 
@@ -43,7 +45,8 @@ export default class NumberAttributeModelObject extends AttributeModelObject {
     return {
       $: {
         ...this._parentToPrint().$,
-        ...this.toObject()
+        min: this._min,
+        max: this._max
       }
     };
   }

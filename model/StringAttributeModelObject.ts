@@ -9,7 +9,9 @@ export interface IStringAttributeModelObject extends IAttributeModelObject {
 }
 export default class StringAttributeModelObject extends AttributeModelObject {
   private _parentToObject: () => IAttributeModelObject;
-  private _parentToPrint: () => any;
+  private _parentToPrint: () => {
+    $: IAttributeModelObject;
+  };
   protected _minLength?: number;
   protected _maxLength?: number;
   protected _pattern?: RegExp;
@@ -42,18 +44,35 @@ export default class StringAttributeModelObject extends AttributeModelObject {
   }
 
   public toObject(): IStringAttributeModelObject {
-    return {
-      ...this._parentToObject(),
-      minLength: this._minLength,
-      maxLength: this._maxLength,
-      pattern: this._pattern
+    const obj: IStringAttributeModelObject = {
+      ...this._parentToObject()
     };
+    const mappy: Array<
+      [
+        keyof Pick<IStringAttributeModelObject, "minLength" | "maxLength">,
+        number | undefined
+      ]
+    > = [
+      ["minLength", this._minLength],
+      ["maxLength", this._maxLength]
+    ];
+    if (this._pattern !== undefined) {
+      obj.pattern = this._pattern;
+    }
+
+    Object.values(mappy).forEach(([key, value]) => {
+      if (value !== undefined) {
+        obj[key] = value;
+      }
+    });
+    return obj;
   }
   public toPrint() {
     return {
       $: {
         ...this._parentToPrint().$,
-        ...this.toObject(),
+        min_length: this._minLength,
+        max_length: this._maxLength,
         pattern: this._pattern ? String(this._pattern) : undefined
       }
     };

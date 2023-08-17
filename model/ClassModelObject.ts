@@ -1,6 +1,7 @@
 import AttributeModelObject, {
   IAttributeModelObject
 } from "./AttributeModelObject";
+import BooleanAttributeModelObject from "./BooleanAttributeModelObject";
 import DateAttributeModelObject from "./DateAttributeModelObject";
 import DraggableModelObjet from "./DraggableModelObjet";
 import NumberAttributeModelObject from "./NumberAttributeModelObject";
@@ -23,6 +24,9 @@ export default class ClassModelObject extends DraggableModelObjet {
     this._attributes = params.attributes.map((attribute) => {
       let result = new AttributeModelObject(attribute);
       switch (attribute.type) {
+        case "boolean":
+          result = new BooleanAttributeModelObject(attribute);
+          break;
         case "string":
           result = new StringAttributeModelObject(attribute);
           break;

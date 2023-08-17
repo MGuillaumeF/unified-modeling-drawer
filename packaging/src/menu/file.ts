@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync } from "fs";
 import { t } from "i18next";
 import { Builder, Parser } from "xml2js";
 import { IAttributeModelObject } from "../.model/AttributeModelObject";
+import { IBooleanAttributeModelObject } from "../.model/BooleanAttributeModelObject";
 import { IClassModelObject } from "../.model/ClassModelObject";
 import { IDateAttributeModelObject } from "../.model/DateAttributeModelObject";
 import ModelObject, { IModelObject } from "../.model/ModelObject";
@@ -78,29 +79,36 @@ export function getFileMenuTemplate(
                               ):
                                 | IAttributeModelObject
                                 | IStringAttributeModelObject
+                                | IBooleanAttributeModelObject
                                 | INumberAttributeModelObject
                                 | IDateAttributeModelObject => {
                                 let mapped:
                                   | IAttributeModelObject
                                   | IStringAttributeModelObject
+                                  | IBooleanAttributeModelObject
                                   | INumberAttributeModelObject
                                   | IDateAttributeModelObject = {
                                   name: attr.$.name,
                                   type: attr.$.type,
                                   mandatory: attr.$.mandatory === "true",
                                   unique: attr.$.unique === "true",
-                                  visibility: attr.$.visibility
+                                  visibility: attr.$.visibility,
+                                  defaultValue: attr.$.default_value
                                 };
 
                                 if (attr.$.type === "string") {
                                   mapped = {
                                     ...mapped,
-                                    minLength: attr.$.minLength,
-                                    maxLength: attr.$.maxLength
+                                    minLength: attr.$.min_length,
+                                    maxLength: attr.$.max_length
                                   };
                                   if (attr.$.pattern) {
                                     mapped.pattern = new RegExp(attr.$.pattern);
                                   }
+                                } else if (attr.$.type === "boolean") {
+                                  mapped = {
+                                    ...mapped
+                                  };
                                 } else if (
                                   [
                                     "int8",

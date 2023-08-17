@@ -6,6 +6,7 @@ export interface IAttributeModelObject {
   mandatory: boolean;
   unique: boolean;
   visibility: Visibility;
+  defaultValue?: string;
 }
 export default class AttributeModelObject {
   protected _name: string;
@@ -13,6 +14,7 @@ export default class AttributeModelObject {
   protected _mandatory: boolean;
   protected _unique: boolean;
   protected _visibility: Visibility;
+  protected _defaultValue?: string;
 
   constructor(params: IAttributeModelObject) {
     this._name = params.name;
@@ -20,6 +22,13 @@ export default class AttributeModelObject {
     this._visibility = params.visibility;
     this._mandatory = params.mandatory;
     this._unique = params.unique;
+    this._defaultValue = params.defaultValue;
+  }
+  public get defaultValue(): string | undefined {
+    return this._defaultValue;
+  }
+  public set defaultValue(defaultValue: string) {
+    this._defaultValue = defaultValue;
   }
   public get type(): string {
     return this._type;
@@ -53,17 +62,28 @@ export default class AttributeModelObject {
   }
 
   public toObject(): IAttributeModelObject {
-    return {
+    const obj: IAttributeModelObject = {
       name: this._name,
       type: this._type,
       mandatory: this._mandatory,
       unique: this._unique,
       visibility: this._visibility
     };
+    if (this._defaultValue !== undefined) {
+      obj.defaultValue = this._defaultValue;
+    }
+    return obj;
   }
   public toPrint() {
-    return {
-      $: this.toObject()
-    };
+    const { defaultValue, ...obj } = this.toObject();
+    if (defaultValue) {
+      return {
+        $: { ...obj, default_value: defaultValue }
+      };
+    } else {
+      return {
+        $: { ...obj }
+      };
+    }
   }
 }

@@ -248,7 +248,7 @@
       mandatory="false"
     >
     </attribute>
-    <attribute name="win" visibility="private" type="bool" mandatory="false">
+    <attribute name="win" visibility="private" type="boolean" mandatory="false">
     </attribute>
     <attribute
       name="members"
