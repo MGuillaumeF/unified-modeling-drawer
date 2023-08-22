@@ -88,8 +88,8 @@ export default class ModelObject {
       name: this._name,
       description: this._description,
       version: this._version,
-      creationDate: this._creationDate.getTime(),
-      lastUpdateDate: this._lastUpdateDate.getTime(),
+      creation_date: this._creationDate.getTime(),
+      last_update_date: this._lastUpdateDate.getTime(),
       class: this._classModelObjects.map((classModelObject) =>
         classModelObject.toPrint()
       )
