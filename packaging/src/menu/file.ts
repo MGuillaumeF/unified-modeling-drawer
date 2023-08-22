@@ -64,10 +64,10 @@ export function getFileMenuTemplate(
                         version: result.model.version[0],
                         description: result.model.description[0],
                         lastUpdateDate: new Date(
-                          Number(result.model.lastUpdateDate)
+                          Number(result.model.last_update_date)
                         ),
                         creationDate: new Date(
-                          Number(result.model.creationDate)
+                          Number(result.model.creation_date)
                         ),
                         classModelObjects: result.model.class.map(
                           (classItem: any): IClassModelObject => ({
