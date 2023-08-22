@@ -100,97 +100,92 @@ export default class ModelObject {
       )
     };
   }
-  public static parse = (data : any) : IModelObject => {
-           const modelObject: IModelObject = {
-                        name: data.model.name[0],
-                        version: data.model.version[0],
-                        description: data.model.description[0],
-                        lastUpdateDate: new Date(
-                          Number(data.model.last_update_date)
-                        ),
-                        creationDate: new Date(
-                          Number(data.model.creation_date)
-                        ),
-                        classModelObjects: data.model.class.map(
-                          (classItem: any): IClassModelObject => ({
-                            name: classItem.$.name,
-                            isAbstract: classItem.$.abstract === "true",
-                            attributes: classItem.attribute.map(
-                              (
-                                attr: any
-                              ):
-                                | IAttributeModelObject
-                                | IStringAttributeModelObject
-                                | IBooleanAttributeModelObject
-                                | INumberAttributeModelObject
-                                | IDateAttributeModelObject => {
-                                let mapped:
-                                  | IAttributeModelObject
-                                  | IStringAttributeModelObject
-                                  | IBooleanAttributeModelObject
-                                  | INumberAttributeModelObject
-                                  | IDateAttributeModelObject = {
-                                  name: attr.$.name,
-                                  type: attr.$.type,
-                                  mandatory: attr.$.mandatory === "true",
-                                  unique: attr.$.unique === "true",
-                                  visibility: attr.$.visibility,
-                                  defaultValue: attr.$.default_value
-                                };
+  public static parse = (data: any): IModelObject => {
+    const modelObject: IModelObject = {
+      name: data.model.name[0],
+      version: data.model.version[0],
+      description: data.model.description[0],
+      lastUpdateDate: new Date(Number(data.model.last_update_date)),
+      creationDate: new Date(Number(data.model.creation_date)),
+      classModelObjects: data.model.class.map(
+        (classItem: any): IClassModelObject => ({
+          name: classItem.$.name,
+          isAbstract: classItem.$.abstract === "true",
+          attributes: classItem.attribute.map(
+            (
+              attr: any
+            ):
+              | IAttributeModelObject
+              | IStringAttributeModelObject
+              | IBooleanAttributeModelObject
+              | INumberAttributeModelObject
+              | IDateAttributeModelObject => {
+              let mapped:
+                | IAttributeModelObject
+                | IStringAttributeModelObject
+                | IBooleanAttributeModelObject
+                | INumberAttributeModelObject
+                | IDateAttributeModelObject = {
+                name: attr.$.name,
+                type: attr.$.type,
+                mandatory: attr.$.mandatory === "true",
+                unique: attr.$.unique === "true",
+                visibility: attr.$.visibility,
+                defaultValue: attr.$.default_value
+              };
 
-                                if (attr.$.type === "string") {
-                                  mapped = {
-                                    ...mapped,
-                                    minLength: attr.$.min_length,
-                                    maxLength: attr.$.max_length
-                                  };
-                                  if (attr.$.pattern) {
-                                    mapped.pattern = new RegExp(attr.$.pattern);
-                                  }
-                                } else if (attr.$.type === "boolean") {
-                                  mapped = {
-                                    ...mapped
-                                  };
-                                } else if (
-                                  [
-                                    "int8",
-                                    "uint8",
-                                    "int16",
-                                    "uint16",
-                                    "int32",
-                                    "uint32",
-                                    "int64",
-                                    "uint64",
-                                    "double",
-                                    "number"
-                                  ].includes(attr.$.type)
-                                ) {
-                                  mapped = {
-                                    ...mapped,
-                                    min: attr.$.min,
-                                    max: attr.$.max
-                                  };
-                                } else if (attr.$.type === "date") {
-                                  const part: Partial<IDateAttributeModelObject> =
-                                    {};
-                                  if (attr.$.min) {
-                                    part.min = new Date(attr.$.min);
-                                  }
-                                  if (attr.$.max) {
-                                    part.max = new Date(attr.$.max);
-                                  }
-                                  mapped = {
-                                    ...mapped,
-                                    ...part
-                                  };
-                                }
+              if (attr.$.type === "string") {
+                mapped = {
+                  ...mapped,
+                  minLength: attr.$.min_length,
+                  maxLength: attr.$.max_length
+                };
+                if (attr.$.pattern) {
+                  mapped.pattern = new RegExp(attr.$.pattern);
+                }
+              } else if (attr.$.type === "boolean") {
+                mapped = {
+                  ...mapped
+                };
+              } else if (
+                [
+                  "int8",
+                  "uint8",
+                  "int16",
+                  "uint16",
+                  "int32",
+                  "uint32",
+                  "int64",
+                  "uint64",
+                  "double",
+                  "number"
+                ].includes(attr.$.type)
+              ) {
+                mapped = {
+                  ...mapped,
+                  min: attr.$.min,
+                  max: attr.$.max
+                };
+              } else if (attr.$.type === "date") {
+                const part: Partial<IDateAttributeModelObject> = {};
+                if (attr.$.min) {
+                  part.min = new Date(attr.$.min);
+                }
+                if (attr.$.max) {
+                  part.max = new Date(attr.$.max);
+                }
+                mapped = {
+                  ...mapped,
+                  ...part
+                };
+              }
 
-                                return mapped;
-                              }
-                            )
-                          })
-                        )
-                      };
+              return mapped;
+            }
+          )
+        })
+      )
+    };
     return modelObject;
-  }
+  };
 }
