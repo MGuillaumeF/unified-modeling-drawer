@@ -3,7 +3,6 @@ import { IAttributeModelObject } from "./AttributeModelObject";
 import { IBooleanAttributeModelObject } from "./BooleanAttributeModelObject";
 import { IClassModelObject } from "./ClassModelObject";
 import { IDateAttributeModelObject } from "./DateAttributeModelObject";
-import ModelObject, { IModelObject } from "./ModelObject";
 import { INumberAttributeModelObject } from "./NumberAttributeModelObject";
 import { IStringAttributeModelObject } from "./StringAttributeModelObject";
 
