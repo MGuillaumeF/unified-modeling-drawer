@@ -8,6 +8,15 @@ export interface IAttributeModelObject {
   visibility: Visibility;
   defaultValue?: string;
 }
+export interface IFileAttributeModelEntry {
+  name: string;
+  type: string;
+  mandatory: "true" | "false";
+  unique: "true" | "false";
+  visibility: Visibility;
+  default_value?: string;
+}
+
 export default class AttributeModelObject {
   protected _name: string;
   protected _type: string;
@@ -74,16 +83,31 @@ export default class AttributeModelObject {
     }
     return obj;
   }
-  public toPrint() {
-    const { defaultValue, ...obj } = this.toObject();
-    if (defaultValue) {
-      return {
-        $: { ...obj, default_value: defaultValue }
-      };
-    } else {
-      return {
-        $: { ...obj }
-      };
+  public toPrint(): { $: IFileAttributeModelEntry } {
+    const { defaultValue, mandatory, unique, ...raw } = this.toObject();
+    let mapped: { $: IFileAttributeModelEntry } = {
+      $: {
+        ...raw,
+        mandatory: mandatory ? "true" : "false",
+        unique: unique ? "true" : "false"
+      }
+    };
+    if (defaultValue !== undefined) {
+      mapped.$.default_value = defaultValue;
     }
+    return mapped;
   }
+  public static parse = (entry: {
+    $: IFileAttributeModelEntry;
+  }): IAttributeModelObject => {
+    const { $ } = entry;
+    return {
+      name: $.name,
+      type: $.type,
+      mandatory: $.mandatory === "true",
+      unique: $.unique === "true",
+      visibility: $.visibility,
+      defaultValue: $.default_value
+    };
+  };
 }

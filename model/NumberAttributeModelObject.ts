@@ -1,15 +1,21 @@
 import AttributeModelObject, {
-  IAttributeModelObject
+  IAttributeModelObject,
+  IFileAttributeModelEntry
 } from "./AttributeModelObject";
 
 export interface INumberAttributeModelObject extends IAttributeModelObject {
   min?: number;
   max?: number;
 }
+export interface IFileNumberAttributeModelEntry
+  extends IFileAttributeModelEntry {
+  min?: number;
+  max?: number;
+}
 export default class NumberAttributeModelObject extends AttributeModelObject {
   private _parentToObject: () => IAttributeModelObject;
   private _parentToPrint: () => {
-    $: IAttributeModelObject;
+    $: IFileNumberAttributeModelEntry;
   };
   protected _min?: number;
   protected _max?: number;
@@ -41,13 +47,33 @@ export default class NumberAttributeModelObject extends AttributeModelObject {
       max: this._max
     };
   }
-  public toPrint() {
-    return {
+  public toPrint(): { $: IFileNumberAttributeModelEntry } {
+    let mapped: { $: IFileNumberAttributeModelEntry } = {
       $: {
-        ...this._parentToPrint().$,
-        min: this._min,
-        max: this._max
+        ...this._parentToPrint().$
       }
     };
+    if (this._min !== undefined) {
+      mapped.$.min = this._min;
+    }
+    if (this._max !== undefined) {
+      mapped.$.max = this._max;
+    }
+    return mapped;
   }
+
+  public static parse = (entry: {
+    $: IFileNumberAttributeModelEntry;
+  }): INumberAttributeModelObject => {
+    const { $ } = entry;
+    const mapped: INumberAttributeModelObject =
+      AttributeModelObject.parse(entry);
+    if ($.min !== undefined) {
+      mapped.min = $.min;
+    }
+    if ($.max !== undefined) {
+      mapped.max = $.max;
+    }
+    return mapped;
+  };
 }

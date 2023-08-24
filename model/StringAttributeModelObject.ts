@@ -1,5 +1,6 @@
 import AttributeModelObject, {
-  IAttributeModelObject
+  IAttributeModelObject,
+  IFileAttributeModelEntry
 } from "./AttributeModelObject";
 
 export interface IStringAttributeModelObject extends IAttributeModelObject {
@@ -7,10 +8,17 @@ export interface IStringAttributeModelObject extends IAttributeModelObject {
   maxLength?: number;
   pattern?: RegExp;
 }
+
+export interface IFileStringAttributeModelEntry
+  extends IFileAttributeModelEntry {
+  min_length?: number;
+  max_length?: number;
+  pattern?: string;
+}
 export default class StringAttributeModelObject extends AttributeModelObject {
   private _parentToObject: () => IAttributeModelObject;
   private _parentToPrint: () => {
-    $: IAttributeModelObject;
+    $: IFileAttributeModelEntry;
   };
   protected _minLength?: number;
   protected _maxLength?: number;
@@ -67,7 +75,7 @@ export default class StringAttributeModelObject extends AttributeModelObject {
     });
     return obj;
   }
-  public toPrint() {
+  public toPrint(): { $: IFileStringAttributeModelEntry } {
     return {
       $: {
         ...this._parentToPrint().$,
@@ -77,4 +85,22 @@ export default class StringAttributeModelObject extends AttributeModelObject {
       }
     };
   }
+
+  public static parse = (entry: {
+    $: IFileStringAttributeModelEntry;
+  }): IStringAttributeModelObject => {
+    const { $ } = entry;
+    const mapped: IStringAttributeModelObject =
+      AttributeModelObject.parse(entry);
+    if ($.min_length !== undefined) {
+      mapped.minLength = $.min_length;
+    }
+    if ($.max_length !== undefined) {
+      mapped.maxLength = $.max_length;
+    }
+    if ($.pattern !== undefined) {
+      mapped.pattern = new RegExp($.pattern);
+    }
+    return mapped;
+  };
 }

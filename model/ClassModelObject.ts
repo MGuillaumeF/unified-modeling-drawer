@@ -1,16 +1,33 @@
 import AttributeModelObject, {
-  IAttributeModelObject
+  IAttributeModelObject,
+  IFileAttributeModelEntry
 } from "./AttributeModelObject";
-import BooleanAttributeModelObject from "./BooleanAttributeModelObject";
-import DateAttributeModelObject from "./DateAttributeModelObject";
+import BooleanAttributeModelObject, {
+  IBooleanAttributeModelObject
+} from "./BooleanAttributeModelObject";
+import DateAttributeModelObject, {
+  IDateAttributeModelObject,
+  IFileDateAttributeModelEntry
+} from "./DateAttributeModelObject";
 import DraggableModelObjet from "./DraggableModelObjet";
-import NumberAttributeModelObject from "./NumberAttributeModelObject";
-import StringAttributeModelObject from "./StringAttributeModelObject";
+import NumberAttributeModelObject, {
+  IFileNumberAttributeModelEntry,
+  INumberAttributeModelObject
+} from "./NumberAttributeModelObject";
+import StringAttributeModelObject, {
+  IFileStringAttributeModelEntry,
+  IStringAttributeModelObject
+} from "./StringAttributeModelObject";
 
 export interface IClassModelObject {
   name: string;
   isAbstract: boolean;
   attributes: IAttributeModelObject[];
+}
+
+export interface IFileClassModelEntry {
+  name: string;
+  abstract: "true" | "false";
 }
 
 export default class ClassModelObject extends DraggableModelObjet {
@@ -85,4 +102,67 @@ export default class ClassModelObject extends DraggableModelObjet {
       attribute: this._attributes.map((attribute) => attribute.toPrint())
     };
   }
+
+  public static parse = (entry: {
+    $: IFileClassModelEntry;
+    attribute: Array<
+      | { $: IFileAttributeModelEntry }
+      | { $: IFileStringAttributeModelEntry }
+      | { $: IFileAttributeModelEntry }
+      | { $: IFileNumberAttributeModelEntry }
+      | { $: IFileDateAttributeModelEntry }
+    >;
+  }): IClassModelObject => {
+    const { $ } = entry;
+    const mapped: IClassModelObject = {
+      name: $.name,
+      isAbstract: $.abstract === "true",
+      attributes: entry.attribute.map(
+        (
+          attr:
+            | { $: IFileAttributeModelEntry }
+            | { $: IFileStringAttributeModelEntry }
+            | { $: IFileAttributeModelEntry }
+            | { $: IFileNumberAttributeModelEntry }
+            | { $: IFileDateAttributeModelEntry }
+        ):
+          | IAttributeModelObject
+          | IStringAttributeModelObject
+          | IBooleanAttributeModelObject
+          | INumberAttributeModelObject
+          | IDateAttributeModelObject => {
+          let mapped:
+            | IAttributeModelObject
+            | IStringAttributeModelObject
+            | IBooleanAttributeModelObject
+            | INumberAttributeModelObject
+            | IDateAttributeModelObject = AttributeModelObject.parse(attr);
+          if (attr.$.type === "string") {
+            mapped = StringAttributeModelObject.parse(attr);
+          } else if (attr.$.type === "boolean") {
+            mapped = BooleanAttributeModelObject.parse(attr);
+          } else if (
+            [
+              "int8",
+              "uint8",
+              "int16",
+              "uint16",
+              "int32",
+              "uint32",
+              "int64",
+              "uint64",
+              "double",
+              "number"
+            ].includes(attr.$.type)
+          ) {
+            mapped = NumberAttributeModelObject.parse(attr);
+          } else if (attr.$.type === "date") {
+            mapped = DateAttributeModelObject.parse(attr);
+          }
+          return mapped;
+        }
+      )
+    };
+    return mapped;
+  };
 }

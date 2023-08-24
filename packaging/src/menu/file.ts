@@ -2,13 +2,7 @@ import { BrowserWindow, dialog } from "electron";
 import { readFileSync, writeFileSync } from "fs";
 import { t } from "i18next";
 import { Builder, Parser } from "xml2js";
-import { IAttributeModelObject } from "../.model/AttributeModelObject";
-import { IBooleanAttributeModelObject } from "../.model/BooleanAttributeModelObject";
-import { IClassModelObject } from "../.model/ClassModelObject";
-import { IDateAttributeModelObject } from "../.model/DateAttributeModelObject";
 import ModelObject, { IModelObject } from "../.model/ModelObject";
-import { INumberAttributeModelObject } from "../.model/NumberAttributeModelObject";
-import { IStringAttributeModelObject } from "../.model/StringAttributeModelObject";
 import NewModelWindow from "../NewModelWindow/NewModelWindow";
 
 /**
@@ -59,7 +53,7 @@ export function getFileMenuTemplate(
                     xmlContent,
                     function (error: Error | null, result: any): void {
                       // convert to ModelObject here before send to html application
-                      const modelObject = ModelObject.parse(result);
+                      const modelObject = ModelObject.parse(result.model);
                       displayedModelUpdater(win, modelObject);
                       win.webContents.send("file-open", modelObject);
                     }

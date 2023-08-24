@@ -1,16 +1,13 @@
 import AttributeModelObject, {
-  IAttributeModelObject
+  IAttributeModelObject,
+  IFileAttributeModelEntry
 } from "./AttributeModelObject";
 
-export interface IBooleanAttributeModelObject extends IAttributeModelObject {
-  minLength?: number;
-  maxLength?: number;
-  pattern?: RegExp;
-}
+export interface IBooleanAttributeModelObject extends IAttributeModelObject {}
 export default class BooleanAttributeModelObject extends AttributeModelObject {
   private _parentToObject: () => IAttributeModelObject;
   private _parentToPrint: () => {
-    $: IAttributeModelObject;
+    $: IFileAttributeModelEntry;
   };
 
   constructor(params: IBooleanAttributeModelObject) {

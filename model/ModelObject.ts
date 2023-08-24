@@ -1,9 +1,11 @@
-import ClassModelObject, { IClassModelObject } from "./ClassModelObject";
-import { IAttributeModelObject } from "./AttributeModelObject";
-import { IBooleanAttributeModelObject } from "./BooleanAttributeModelObject";
-import { IDateAttributeModelObject } from "./DateAttributeModelObject";
-import { INumberAttributeModelObject } from "./NumberAttributeModelObject";
-import { IStringAttributeModelObject } from "./StringAttributeModelObject";
+import { IFileAttributeModelEntry } from "./AttributeModelObject";
+import ClassModelObject, {
+  IClassModelObject,
+  IFileClassModelEntry
+} from "./ClassModelObject";
+import { IFileDateAttributeModelEntry } from "./DateAttributeModelObject";
+import { IFileNumberAttributeModelEntry } from "./NumberAttributeModelObject";
+import { IFileStringAttributeModelEntry } from "./StringAttributeModelObject";
 
 export interface IModelObject {
   name: string;
@@ -83,8 +85,9 @@ export default class ModelObject {
       creationDate: this._creationDate,
       lastUpdateDate: this._lastUpdateDate,
       sourcePath: this._sourcePath,
-      classModelObjects: this._classModelObjects.map((classModelObject) =>
-        classModelObject.toObject()
+      classModelObjects: this._classModelObjects.map(
+        (classModelObject: ClassModelObject): IClassModelObject =>
+          classModelObject.toObject()
       )
     };
   }
@@ -100,92 +103,44 @@ export default class ModelObject {
       )
     };
   }
-  public static parse = (data: any): IModelObject => {
+  public static parse = (entry: IFileModelEntry): IModelObject => {
     const modelObject: IModelObject = {
-      name: data.model.name[0],
-      version: data.model.version[0],
-      description: data.model.description[0],
-      lastUpdateDate: new Date(Number(data.model.last_update_date)),
-      creationDate: new Date(Number(data.model.creation_date)),
-      classModelObjects: data.model.class.map(
-        (classItem: any): IClassModelObject => ({
-          name: classItem.$.name,
-          isAbstract: classItem.$.abstract === "true",
-          attributes: classItem.attribute.map(
-            (
-              attr: any
-            ):
-              | IAttributeModelObject
-              | IStringAttributeModelObject
-              | IBooleanAttributeModelObject
-              | INumberAttributeModelObject
-              | IDateAttributeModelObject => {
-              let mapped:
-                | IAttributeModelObject
-                | IStringAttributeModelObject
-                | IBooleanAttributeModelObject
-                | INumberAttributeModelObject
-                | IDateAttributeModelObject = {
-                name: attr.$.name,
-                type: attr.$.type,
-                mandatory: attr.$.mandatory === "true",
-                unique: attr.$.unique === "true",
-                visibility: attr.$.visibility,
-                defaultValue: attr.$.default_value
-              };
-
-              if (attr.$.type === "string") {
-                mapped = {
-                  ...mapped,
-                  minLength: attr.$.min_length,
-                  maxLength: attr.$.max_length
-                };
-                if (attr.$.pattern) {
-                  mapped.pattern = new RegExp(attr.$.pattern);
-                }
-              } else if (attr.$.type === "boolean") {
-                mapped = {
-                  ...mapped
-                };
-              } else if (
-                [
-                  "int8",
-                  "uint8",
-                  "int16",
-                  "uint16",
-                  "int32",
-                  "uint32",
-                  "int64",
-                  "uint64",
-                  "double",
-                  "number"
-                ].includes(attr.$.type)
-              ) {
-                mapped = {
-                  ...mapped,
-                  min: attr.$.min,
-                  max: attr.$.max
-                };
-              } else if (attr.$.type === "date") {
-                const part: Partial<IDateAttributeModelObject> = {};
-                if (attr.$.min) {
-                  part.min = new Date(attr.$.min);
-                }
-                if (attr.$.max) {
-                  part.max = new Date(attr.$.max);
-                }
-                mapped = {
-                  ...mapped,
-                  ...part
-                };
-              }
-
-              return mapped;
-            }
-          )
-        })
+      name: entry.name[0] ?? "",
+      version: entry.version[0] ?? 1,
+      description: entry.description[0] ?? "",
+      lastUpdateDate: new Date(Number(entry.last_update_date)),
+      creationDate: new Date(Number(entry.creation_date)),
+      classModelObjects: entry.class.map(
+        (classItem: {
+          $: IFileClassModelEntry;
+          attribute: Array<
+            | { $: IFileAttributeModelEntry }
+            | { $: IFileStringAttributeModelEntry }
+            | { $: IFileAttributeModelEntry }
+            | { $: IFileNumberAttributeModelEntry }
+            | { $: IFileDateAttributeModelEntry }
+          >;
+        }): IClassModelObject => ClassModelObject.parse(classItem)
       )
     };
     return modelObject;
   };
+}
+
+interface IFileModelEntry {
+  name: string[];
+  version: number[];
+  description: string[];
+  last_update_date: number;
+  creation_date: number;
+  class: Array<{
+    $: IFileClassModelEntry;
+    attribute: Array<
+      | { $: IFileAttributeModelEntry }
+      | { $: IFileStringAttributeModelEntry }
+      | { $: IFileAttributeModelEntry }
+      | { $: IFileNumberAttributeModelEntry }
+      | { $: IFileDateAttributeModelEntry }
+    >;
+  }>;
 }

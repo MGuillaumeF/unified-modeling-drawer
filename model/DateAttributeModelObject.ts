@@ -1,15 +1,21 @@
 import AttributeModelObject, {
-  IAttributeModelObject
+  IAttributeModelObject,
+  IFileAttributeModelEntry
 } from "./AttributeModelObject";
 
 export interface IDateAttributeModelObject extends IAttributeModelObject {
   min?: Date;
   max?: Date;
 }
+
+export interface IFileDateAttributeModelEntry extends IFileAttributeModelEntry {
+  min?: number;
+  max?: number;
+}
 export default class DateAttributeModelObject extends AttributeModelObject {
   private _parentToObject: () => IAttributeModelObject;
   private _parentToPrint: () => {
-    $: IAttributeModelObject;
+    $: IFileAttributeModelEntry;
   };
   protected _min?: Date;
   protected _max?: Date;
@@ -41,13 +47,33 @@ export default class DateAttributeModelObject extends AttributeModelObject {
       max: this._max
     };
   }
-  public toPrint() {
-    return {
+
+  public toPrint(): { $: IFileDateAttributeModelEntry } {
+    let mapped: { $: IFileDateAttributeModelEntry } = {
       $: {
-        ...this._parentToPrint().$,
-        min: this._min ? this._min.getTime() : undefined,
-        max: this._max ? this._max.getTime() : undefined
+        ...this._parentToPrint().$
       }
     };
+    if (this._min !== undefined) {
+      mapped.$.min = this._min.getTime();
+    }
+    if (this._max !== undefined) {
+      mapped.$.max = this._max.getTime();
+    }
+    return mapped;
   }
+
+  public static parse = (entry: {
+    $: IFileDateAttributeModelEntry;
+  }): IDateAttributeModelObject => {
+    const { $ } = entry;
+    const mapped: IDateAttributeModelObject = AttributeModelObject.parse(entry);
+    if ($.min !== undefined) {
+      mapped.min = new Date($.min);
+    }
+    if ($.max !== undefined) {
+      mapped.max = new Date($.max);
+    }
+    return mapped;
+  };
 }
