@@ -1,3 +1,12 @@
+import { IFileAttributeModelEntry } from "./AttributeModelObject";
+import ClassModelObject, {
+  IClassModelObject,
+  IFileClassModelEntry
+} from "./ClassModelObject";
+import { IFileDateAttributeModelEntry } from "./DateAttributeModelObject";
+import { IFileNumberAttributeModelEntry } from "./NumberAttributeModelObject";
+import { IFileStringAttributeModelEntry } from "./StringAttributeModelObject";
+
 export interface IModelObject {
   name: string;
   description: string;
@@ -5,6 +14,7 @@ export interface IModelObject {
   creationDate: Date;
   lastUpdateDate: Date;
   sourcePath?: string;
+  classModelObjects: IClassModelObject[];
 }
 
 export default class ModelObject {
@@ -14,22 +24,19 @@ export default class ModelObject {
   private _sourcePath?: string;
   private _creationDate: Date;
   private _lastUpdateDate: Date;
-  constructor({
-    name,
-    description,
-    version,
-    creationDate,
-    sourcePath,
-    lastUpdateDate
-  }: IModelObject) {
-    this._name = name;
-    this._description = description;
-    this._version = version;
-    this._creationDate = creationDate;
-    this._lastUpdateDate = lastUpdateDate;
-    if (sourcePath) {
-      this._sourcePath = sourcePath;
+  private _classModelObjects: ClassModelObject[] = [];
+  constructor(params: IModelObject) {
+    this._name = params.name;
+    this._description = params.description;
+    this._version = params.version;
+    this._creationDate = params.creationDate;
+    this._lastUpdateDate = params.lastUpdateDate;
+    if (params.sourcePath) {
+      this._sourcePath = params.sourcePath;
     }
+    this._classModelObjects = params.classModelObjects.map(
+      (classModelObject) => new ClassModelObject(classModelObject)
+    );
   }
   public get name(): string {
     return this._name;
@@ -64,6 +71,12 @@ export default class ModelObject {
   public set lastUpdateDate(lastUpdateDate: Date) {
     this._lastUpdateDate = lastUpdateDate;
   }
+  public get classModelObjects(): ClassModelObject[] {
+    return this._classModelObjects;
+  }
+  public set classModelObjects(classModelObjects: ClassModelObject[]) {
+    this._classModelObjects = classModelObjects;
+  }
   public toObject(): IModelObject {
     return {
       name: this._name,
@@ -71,7 +84,11 @@ export default class ModelObject {
       version: this._version,
       creationDate: this._creationDate,
       lastUpdateDate: this._lastUpdateDate,
-      sourcePath: this._sourcePath
+      sourcePath: this._sourcePath,
+      classModelObjects: this._classModelObjects.map(
+        (classModelObject: ClassModelObject): IClassModelObject =>
+          classModelObject.toObject()
+      )
     };
   }
   public toPrint() {
@@ -79,8 +96,51 @@ export default class ModelObject {
       name: this._name,
       description: this._description,
       version: this._version,
-      creationDate: this._creationDate.getTime(),
-      lastUpdateDate: this._lastUpdateDate.getTime()
+      creation_date: this._creationDate.getTime(),
+      last_update_date: this._lastUpdateDate.getTime(),
+      class: this._classModelObjects.map((classModelObject) =>
+        classModelObject.toPrint()
+      )
     };
   }
+  public static parse = (entry: IFileModelEntry): IModelObject => {
+    const modelObject: IModelObject = {
+      name: entry.name[0] ?? "",
+      version: entry.version[0] ?? 1,
+      description: entry.description[0] ?? "",
+      lastUpdateDate: new Date(Number(entry.last_update_date)),
+      creationDate: new Date(Number(entry.creation_date)),
+      classModelObjects: entry.class.map(
+        (classItem: {
+          $: IFileClassModelEntry;
+          attribute: Array<
+            | { $: IFileAttributeModelEntry }
+            | { $: IFileStringAttributeModelEntry }
+            | { $: IFileAttributeModelEntry }
+            | { $: IFileNumberAttributeModelEntry }
+            | { $: IFileDateAttributeModelEntry }
+          >;
+        }): IClassModelObject => ClassModelObject.parse(classItem)
+      )
+    };
+    return modelObject;
+  };
+}
+
+interface IFileModelEntry {
+  name: string[];
+  version: number[];
+  description: string[];
+  last_update_date: number;
+  creation_date: number;
+  class: Array<{
+    $: IFileClassModelEntry;
+    attribute: Array<
+      | { $: IFileAttributeModelEntry }
+      | { $: IFileStringAttributeModelEntry }
+      | { $: IFileAttributeModelEntry }
+      | { $: IFileNumberAttributeModelEntry }
+      | { $: IFileDateAttributeModelEntry }
+    >;
+  }>;
 }

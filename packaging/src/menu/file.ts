@@ -52,16 +52,10 @@ export function getFileMenuTemplate(
                   parser.parseString(
                     xmlContent,
                     function (error: Error | null, result: any): void {
-                      // TODO convert to ModelObject here before send to html application
-                      const modelObject: IModelObject = {
-                        name: result.model.name,
-                        version: result.model.version,
-                        description: result.model.description,
-                        lastUpdateDate: new Date(result.model.lastUpdateDate),
-                        creationDate: new Date(result.model.creationDate)
-                      };
+                      // convert to ModelObject here before send to html application
+                      const modelObject = ModelObject.parse(result.model);
                       displayedModelUpdater(win, modelObject);
-                      win.webContents.send("file-open", result);
+                      win.webContents.send("file-open", modelObject);
                     }
                   );
                 }

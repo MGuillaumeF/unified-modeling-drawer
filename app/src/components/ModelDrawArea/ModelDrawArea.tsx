@@ -1,5 +1,8 @@
 import { IpcRendererEvent } from "electron";
 import React, { useState } from "react";
+import AttributeModelObject from "src/.model/AttributeModelObject";
+import ClassModelObject from "src/.model/ClassModelObject";
+import ModelObject, { IModelObject } from "../../.model/ModelObject";
 import HistoryManager from "../../HistoryManager/HistoryManager";
 import ClassObject, {
   ClassObjectProps
@@ -17,17 +20,20 @@ export function ModelDrawArea(): React.JSX.Element {
 
   if ("electronAPI" in window) {
     window.electronAPI.handleOpenFile(
-      (event: IpcRendererEvent, value: any): void => {
-        console.log(event, value);
-        const classObjectList = value.model.class.map((item: any) => ({
-          name: item.$.name,
-          isAbstract: item.$.abstract === "true",
-          attributes: item.attribute.map((item: any) => ({
-            visibility: item.$.visibility,
-            name: item.$.name,
-            type: item.$.type
-          }))
-        }));
+      (event: IpcRendererEvent, value: IModelObject): void => {
+        const modelObject = new ModelObject(value);
+        console.log(event, value, modelObject);
+        const classObjectList = modelObject.classModelObjects.map(
+          (item: ClassModelObject) => ({
+            name: item.name,
+            isAbstract: item.isAbstract,
+            attributes: item.attributes.map((item: AttributeModelObject) => ({
+              visibility: item.visibility,
+              name: item.name,
+              type: item.type
+            }))
+          })
+        );
         setClassObjectList(classObjectList);
       }
     );

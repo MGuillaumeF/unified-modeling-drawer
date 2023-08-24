@@ -1,5 +1,5 @@
 import { IpcRendererEvent } from "electron";
-import ModelObject from "./.model/ModelObject";
+import ModelObject, { IModelObject } from "./.model/ModelObject";
 
 interface ElectronAPI {
   createModel: (model: ModelObject) => void;
@@ -7,7 +7,7 @@ interface ElectronAPI {
     callback: (event: IpcRendererEvent, value: string) => void
   ) => void;
   handleOpenFile: (
-    callback: (event: IpcRendererEvent, ...args: any[]) => void
+    callback: (event: IpcRendererEvent, value: IModelObject) => void
   ) => void;
 }
 

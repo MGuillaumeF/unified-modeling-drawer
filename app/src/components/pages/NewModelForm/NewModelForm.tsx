@@ -31,7 +31,8 @@ function onSubmit(event: FormEvent<HTMLFormElement>) {
     description,
     version: 1,
     creationDate: new Date(),
-    lastUpdateDate: new Date()
+    lastUpdateDate: new Date(),
+    classModelObjects: []
   });
   if ("electronAPI" in window) {
     window.electronAPI.createModel(modelObject.toObject());
