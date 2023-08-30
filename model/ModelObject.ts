@@ -10,7 +10,7 @@ import { IFileStringAttributeModelEntry } from "./StringAttributeModelObject";
 export interface IModelObject {
   name: string;
   description: string;
-  version: number;
+  version: string;
   creationDate: Date;
   lastUpdateDate: Date;
   sourcePath?: string;
@@ -20,7 +20,7 @@ export interface IModelObject {
 export default class ModelObject {
   private _name: string;
   private _description: string;
-  private _version: number;
+  private _version: string;
   private _sourcePath?: string;
   private _creationDate: Date;
   private _lastUpdateDate: Date;
@@ -50,10 +50,10 @@ export default class ModelObject {
   public set description(description: string) {
     this._description = description;
   }
-  public get version(): number {
+  public get version(): string {
     return this._version;
   }
-  public set version(version: number) {
+  public set version(version: string) {
     this._version = version;
   }
   public get sourcePath(): string | undefined {
@@ -106,7 +106,7 @@ export default class ModelObject {
   public static parse = (entry: IFileModelEntry): IModelObject => {
     const modelObject: IModelObject = {
       name: entry.name[0] ?? "",
-      version: entry.version[0] ?? 1,
+      version: entry.version[0] ?? "1.0.0",
       description: entry.description[0] ?? "",
       lastUpdateDate: new Date(Number(entry.last_update_date)),
       creationDate: new Date(Number(entry.creation_date)),
@@ -127,9 +127,9 @@ export default class ModelObject {
   };
 }
 
-interface IFileModelEntry {
+export interface IFileModelEntry {
   name: string[];
-  version: number[];
+  version: string[];
   description: string[];
   last_update_date: number;
   creation_date: number;

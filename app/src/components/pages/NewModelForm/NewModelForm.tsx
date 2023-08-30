@@ -29,7 +29,7 @@ function onSubmit(event: FormEvent<HTMLFormElement>) {
   const modelObject = new ModelObject({
     name,
     description,
-    version: 1,
+    version: "1.0.0",
     creationDate: new Date(),
     lastUpdateDate: new Date(),
     classModelObjects: []
