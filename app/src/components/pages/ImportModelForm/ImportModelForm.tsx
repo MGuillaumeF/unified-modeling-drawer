@@ -29,7 +29,7 @@ function ImportModelForm({ models }: Props) {
         </Details>
       ))}
       <Button id={"import-add-project-file"} type={"button"}>
-        Importer
+        Ajouter
       </Button>
       <Button id={""} type={"button"}>
         Importer
