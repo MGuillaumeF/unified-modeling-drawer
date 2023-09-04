@@ -32,23 +32,25 @@ const getOnClick = (
 function OpenProjectPage({ id }: Props) {
   const [choice, setChoice] = useState<"new" | "import">("new");
   return (
-    <div id={id} className={style.OpenProjectPage}>
-      <Button
-        id="open-project-new"
-        type="button"
-        className={choice === "new" ? "active" : undefined}
-        onClick={getOnClick(setChoice, "new")}
-      >
-        Nouveau
-      </Button>
-      <Button
-        id="open-project-import"
-        type="button"
-        className={choice === "import" ? "active" : undefined}
-        onClick={getOnClick(setChoice, "import")}
-      >
-        Importer
-      </Button>
+    <div id={id} className={style["open-project-page"]}>
+      <div className={style["open-project-method-selector"]}>
+        <Button
+          id="open-project-new"
+          type="button"
+          className={choice === "new" ? style["active"] : style["unactive"]}
+          onClick={getOnClick(setChoice, "new")}
+        >
+          Nouveau
+        </Button>
+        <Button
+          id="open-project-import"
+          type="button"
+          className={choice === "import" ? style["active"] : style["unactive"]}
+          onClick={getOnClick(setChoice, "import")}
+        >
+          Importer
+        </Button>
+      </div>
       {choice === "new" ? (
         <NewModelForm />
       ) : (

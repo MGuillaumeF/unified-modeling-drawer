@@ -1,6 +1,8 @@
 import React, { FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import ModelObject from "../../../.model/ModelObject";
+import Button from "../../BasicButton/Button";
+import BasicInput from "../../BasicInput/BasicInput";
 import style from "./NewModelForm.scss";
 
 function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -39,16 +41,19 @@ function onSubmit(event: FormEvent<HTMLFormElement>) {
   }
 }
 
+const inputProperties = { required: true };
+
 function NewModelForm() {
   const { t } = useTranslation();
   return (
     <div className={style.NewModelForm}>
       <form action="" onSubmit={onSubmit}>
-        <input
+        <BasicInput
+          id="new-project-name"
           type="text"
           name="name"
-          required
-          placeholder={t("FORMS.NEW.INPUTS.NAME.PLACEHOLDER")}
+          label={t("FORMS.NEW.INPUTS.NAME.PLACEHOLDER")}
+          inputProperties={inputProperties}
         />
         <textarea
           name="description"
@@ -57,7 +62,12 @@ function NewModelForm() {
           required
           placeholder={t("FORMS.NEW.INPUTS.DESCRIPTION.PLACEHOLDER")}
         ></textarea>
-        <input type="submit" value={t("FORMS.NEW.INPUTS.SUBMIT_BUTTON")} />
+        <Button
+          id="create-new-model"
+          type="submit"
+          level="primary"
+          value={t("FORMS.NEW.INPUTS.SUBMIT_BUTTON")}
+        />
       </form>
     </div>
   );

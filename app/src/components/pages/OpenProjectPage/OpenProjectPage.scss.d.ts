@@ -1,6 +1,9 @@
 declare namespace OpenProjectPageScssNamespace {
   export interface IOpenProjectPageScss {
-    OpenProjectPage: string;
+    active: string;
+    "open-project-method-selector": string;
+    "open-project-page": string;
+    unactive: string;
   }
 }
 

@@ -1,7 +1,9 @@
 import React from "react";
 import ModelObject from "../../../.model/ModelObject";
 import Button from "../../BasicButton/Button";
+import BasicInput from "../../BasicInput/BasicInput";
 import Details from "../../Details/Details";
+import style from "./ImportModelForm.scss";
 
 type Props = {
   models: ModelObject[];
@@ -10,6 +12,7 @@ type Props = {
 function ImportModelForm({ models }: Props) {
   return (
     <>
+      <h2>Aperçu des projets à importer</h2>
       {models.map((model: ModelObject) => (
         <Details
           id={model.name}
@@ -28,12 +31,17 @@ function ImportModelForm({ models }: Props) {
           </ul>
         </Details>
       ))}
-      <Button id={"import-add-project-file"} type={"button"}>
-        Ajouter
-      </Button>
-      <Button id={""} type={"button"}>
-        Importer
-      </Button>
+      <div className={style["import-button"]}>
+        <BasicInput
+          type="file"
+          name="import"
+          id="add-import-file"
+          label={"Ajouter"}
+        />
+        <Button id={"import-apply"} type={"submit"} level="primary">
+          Importer
+        </Button>
+      </div>
     </>
   );
 }

@@ -34,7 +34,11 @@ const levelMap = new Map<string, string>([
  */
 function Button(props: IButtonProps): ReactElement {
   const { className, level } = props;
-  return <button {...props} className={loadCss({ className, level })}></button>;
+  return (
+    <button {...props} className={loadCss({ className, level })}>
+      {props.children ?? props.value}
+    </button>
+  );
 }
 
 export default Button;
