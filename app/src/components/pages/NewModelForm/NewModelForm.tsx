@@ -1,53 +1,57 @@
 import React, { FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import ModelObject from "../../../.model/ModelObject";
+import ModelObject, { IModelObject } from "../../../.model/ModelObject";
 import Button from "../../BasicButton/Button";
 import BasicInput from "../../BasicInput/BasicInput";
 import style from "./NewModelForm.scss";
 
-function onSubmit(event: FormEvent<HTMLFormElement>) {
-  event.preventDefault();
+function getOnSubmit(
+  addModelObject: (modelObject: IModelObject) => void
+): (event: FormEvent<HTMLFormElement>) => void {
+  return (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  const formElements = event.currentTarget.elements;
+    const formElements = event.currentTarget.elements;
 
-  const formData = new Map<string, string | null>(
-    ["name", "description"].map((field: string) => {
-      const fieldInput = formElements.namedItem(field);
-      let value = null;
-      if (
-        fieldInput instanceof HTMLInputElement ||
-        fieldInput instanceof RadioNodeList ||
-        fieldInput instanceof HTMLTextAreaElement ||
-        fieldInput instanceof HTMLSelectElement
-      ) {
-        value = fieldInput.value;
-      }
-      return [field, value];
-    })
-  );
+    const formData = new Map<string, string | null>(
+      ["name", "description"].map((field: string) => {
+        const fieldInput = formElements.namedItem(field);
+        let value = null;
+        if (
+          fieldInput instanceof HTMLInputElement ||
+          fieldInput instanceof RadioNodeList ||
+          fieldInput instanceof HTMLTextAreaElement ||
+          fieldInput instanceof HTMLSelectElement
+        ) {
+          value = fieldInput.value;
+        }
+        return [field, value];
+      })
+    );
 
-  const name = formData.get("name") ?? "";
-  const description = formData.get("description") ?? "";
-  const modelObject = new ModelObject({
-    name,
-    description,
-    version: "1.0.0",
-    creationDate: new Date(),
-    lastUpdateDate: new Date(),
-    classModelObjects: []
-  });
-  if ("electronAPI" in window) {
-    window.electronAPI.createModel(modelObject.toObject());
-  }
+    const name = formData.get("name") ?? "";
+    const description = formData.get("description") ?? "";
+    const modelObject = new ModelObject({
+      name,
+      description,
+      version: "1.0.0",
+      creationDate: new Date(),
+      lastUpdateDate: new Date(),
+      classModelObjects: []
+    });
+    addModelObject(modelObject.toObject());
+  };
 }
 
 const inputProperties = { required: true };
 
-function NewModelForm() {
+function NewModelForm(props: {
+  addModelObject: (modelObject: IModelObject) => void;
+}) {
   const { t } = useTranslation();
   return (
     <div className={style.NewModelForm}>
-      <form action="" onSubmit={onSubmit}>
+      <form action="" onSubmit={getOnSubmit(props.addModelObject)}>
         <BasicInput
           id="new-project-name"
           type="text"

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ModelObject from "../../../.model/ModelObject";
+import { add } from "../../../exchanges";
 import Button from "../../BasicButton/Button";
 import ImportModelForm from "../ImportModelForm/ImportModelForm";
 import NewModelForm from "../NewModelForm/NewModelForm";
@@ -52,7 +53,7 @@ function OpenProjectPage({ id }: Props) {
         </Button>
       </div>
       {choice === "new" ? (
-        <NewModelForm />
+        <NewModelForm addModelObject={add} />
       ) : (
         <ImportModelForm models={EXAMPLE_MODELS} />
       )}
