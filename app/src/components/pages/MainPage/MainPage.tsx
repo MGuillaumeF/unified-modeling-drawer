@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import Button from "../../BasicButton/Button";
+import style from "./MainPage.scss";
 
 type Props = {};
 
@@ -37,13 +38,15 @@ function MainPage({}: Props) {
 
   return (
     <main>
-      <aside>
-        <div className="tree-projects">
+      <aside className={style["projects"]}>
+        <div className={style["tree-projects"]}>
           <h2>Projets :</h2>
-          <div className="tree-projects-list">
-            {projectNames.map((value: string): string => {
-              return value;
-            })}
+          <div className={style["tree-projects-list"]}>
+            <ul>
+              {projectNames.map((value: string): JSX.Element => {
+                return <li key={value}>{value}</li>;
+              })}
+            </ul>
           </div>
           <Button
             id="add-projet"

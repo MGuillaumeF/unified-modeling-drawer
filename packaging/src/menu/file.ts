@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync } from "fs";
 import { t } from "i18next";
 import { Builder, Parser } from "xml2js";
 import ModelObject, { IModelObject } from "../.model/ModelObject";
+import ViewObject from "../.model/ViewObject";
 import NewModelWindow from "../NewModelWindow/NewModelWindow";
 
 /**
@@ -53,9 +54,18 @@ export function getFileMenuTemplate(
                     xmlContent,
                     function (error: Error | null, result: any): void {
                       // convert to ModelObject here before send to html application
-                      const modelObject = ModelObject.parse(result.model);
+                      const modelObject = ModelObject.parse(
+                        result.project.model[0]
+                      );
+                      const viewObject = ViewObject.parse(
+                        result.project.view[0]
+                      );
                       displayedModelUpdater(win, modelObject);
-                      win.webContents.send("file-open", modelObject);
+                      win.webContents.send(
+                        "file-open",
+                        modelObject,
+                        viewObject
+                      );
                     }
                   );
                 }

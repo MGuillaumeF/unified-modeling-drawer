@@ -2,7 +2,9 @@ import { IpcRendererEvent } from "electron";
 import React, { useState } from "react";
 import AttributeModelObject from "src/.model/AttributeModelObject";
 import ClassModelObject from "src/.model/ClassModelObject";
+import DiagramObject from "../../.model/DiagramObject";
 import ModelObject, { IModelObject } from "../../.model/ModelObject";
+import ViewObject, { IViewObject } from "../../.model/ViewObject";
 import HistoryManager from "../../HistoryManager/HistoryManager";
 import ClassObject, {
   ClassObjectProps
@@ -13,44 +15,78 @@ const historyManager = new HistoryManager();
 const getOnDragOver: React.DragEventHandler<HTMLDivElement> = (e) =>
   e.preventDefault();
 
+function classModelObjectToProps(
+  classModelObject: ClassModelObject
+): ClassObjectProps {
+  return {
+    name: classModelObject.name,
+    isAbstract: classModelObject.isAbstract,
+    attributes: classModelObject.attributes.map(
+      (attribute: AttributeModelObject) => ({
+        visibility: attribute.visibility,
+        name: attribute.name,
+        type: attribute.type
+      })
+    )
+  };
+}
+
 export function ModelDrawArea(): React.JSX.Element {
-  const [classObjectList, setClassObjectList] = useState<
-    Array<ClassObjectProps>
+  const [classModelObjectList, setClassModelObjectList] = useState<
+    Array<ClassModelObject>
+  >([]);
+  const [diagramObjectList, setDiagramObjectList] = useState<
+    Array<DiagramObject>
   >([]);
 
   if ("electronAPI" in window) {
     window.electronAPI.handleOpenFile(
-      (event: IpcRendererEvent, value: IModelObject): void => {
-        const modelObject = new ModelObject(value);
-        console.log(event, value, modelObject);
-        const classObjectList = modelObject.classModelObjects.map(
-          (item: ClassModelObject) => ({
-            name: item.name,
-            isAbstract: item.isAbstract,
-            attributes: item.attributes.map((item: AttributeModelObject) => ({
-              visibility: item.visibility,
-              name: item.name,
-              type: item.type
-            }))
-          })
-        );
-        setClassObjectList(classObjectList);
+      (
+        event: IpcRendererEvent,
+        model: IModelObject,
+        view: IViewObject
+      ): void => {
+        const modelObject = new ModelObject(model);
+        const viewObject = new ViewObject(view);
+        console.log(event, model, modelObject);
+        setClassModelObjectList(modelObject.classModelObjects);
+        setDiagramObjectList(viewObject.diagrams);
       }
     );
   }
 
   return (
-    <div>
-      <div onDragOver={getOnDragOver}>
-        {classObjectList.map((item) => (
-          <ClassObject
-            key={item.name}
-            name={item.name}
-            isAbstract={item.isAbstract}
-            attributes={item.attributes}
-          />
-        ))}
-      </div>
-    </div>
+    <>
+      {diagramObjectList.map((diagramObject: DiagramObject): JSX.Element => {
+        return (
+          <div key={diagramObject.name}>
+            <h2>{diagramObject.name}</h2>
+            <div onDragOver={getOnDragOver}>
+              {diagramObject.cards.map((item): JSX.Element => {
+                const classObject = classModelObjectList.find(
+                  (classObject: ClassModelObject): boolean =>
+                    item.name === classObject.name
+                );
+                const convertedClassObject = classObject
+                  ? classModelObjectToProps(classObject)
+                  : null;
+                return convertedClassObject ? (
+                  <ClassObject
+                    key={convertedClassObject.name}
+                    name={convertedClassObject.name}
+                    x={item.x}
+                    y={item.y}
+                    isAbstract={convertedClassObject.isAbstract}
+                    attributes={convertedClassObject.attributes}
+                  />
+                ) : (
+                  <></>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </>
   );
 }
