@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import { useTranslation } from "react-i18next";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ModelDrawArea } from "./components/ModelDrawArea/ModelDrawArea";
-import NewModelForm from "./components/pages/NewModelForm/NewModelForm";
+import NewModelForm from "./components/pages/NewProjectForm/NewProjectForm";
 import OpenProjectPage from "./components/pages/OpenProjectPage/OpenProjectPage";
 import { add } from "./exchanges";
 import "./i18n";
@@ -30,7 +30,7 @@ function App(): React.JSX.Element {
         <Route path="/" element={<ModelDrawArea />}></Route>
         <Route
           path="/model/new"
-          element={<NewModelForm addModelObject={add} />}
+          element={<NewModelForm addProjectObject={add} />}
         ></Route>
         <Route
           path="/model/entry"

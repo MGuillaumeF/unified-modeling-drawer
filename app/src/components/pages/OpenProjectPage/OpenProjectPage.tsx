@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import ModelObject from "../../../.model/ModelObject";
+import ProjectObject from "../../../.model/ProjectObject";
 import { add } from "../../../exchanges";
 import Button from "../../BasicButton/Button";
-import ImportModelForm from "../ImportModelForm/ImportModelForm";
-import NewModelForm from "../NewModelForm/NewModelForm";
+import ImportProjectForm from "../ImportProjectForm/ImportProjectForm";
+import NewModelForm from "../NewProjectForm/NewProjectForm";
 import style from "./OpenProjectPage.scss";
 
 const EXAMPLE_MODELS = [
-  new ModelObject(
-    ModelObject.parse({
-      class: [],
+  new ProjectObject(
+    ProjectObject.parse({
+      model: [{ class: [] }],
+      view: [{ diagram: [] }],
       creation_date: 0,
       description: ["example of project"],
       last_update_date: 0,
@@ -53,9 +54,9 @@ function OpenProjectPage({ id }: Props) {
         </Button>
       </div>
       {choice === "new" ? (
-        <NewModelForm addModelObject={add} />
+        <NewModelForm addProjectObject={add} />
       ) : (
-        <ImportModelForm models={EXAMPLE_MODELS} />
+        <ImportProjectForm projects={EXAMPLE_MODELS} />
       )}
     </div>
   );

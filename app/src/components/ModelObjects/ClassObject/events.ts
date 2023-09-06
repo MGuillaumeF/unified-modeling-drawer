@@ -8,7 +8,8 @@ export function getOnDragEnd(
   pos: {
     x: number;
     y: number;
-  }
+  },
+  onMove?: (x: number, y: number) => void
 ): React.DragEventHandler<HTMLDivElement> {
   return (event): void => {
     // const ev = {x : event.nativeEvent.clientX, y : event.nativeEvent.clientY}
@@ -17,6 +18,9 @@ export function getOnDragEnd(
       y: event.nativeEvent.pageY - pos.y
     };
     setState(ev);
+    if (onMove) {
+      onMove(ev.x, ev.y);
+    }
   };
 }
 

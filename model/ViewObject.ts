@@ -29,13 +29,11 @@ export default class ViewObject {
       )
     };
   }
-  public toPrint(): { $: IFileViewEntry } {
+  public toPrint(): IFileViewEntry {
     return {
-      $: {
-        diagram: this._diagrams.map((diagramObject: DiagramObject) =>
-          diagramObject.toPrint()
-        )
-      }
+      diagram: this._diagrams.map((diagramObject: DiagramObject) =>
+        diagramObject.toPrint()
+      )
     };
   }
   public static parse = (entry: IFileViewEntry): IViewObject => {

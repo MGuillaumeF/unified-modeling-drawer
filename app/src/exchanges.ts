@@ -1,13 +1,12 @@
-import { IModelObject } from "./.model/ModelObject";
+import { IProjectObject } from "./.model/ProjectObject";
 
-export function add(modelObject: IModelObject): void {
+export function add(projectObject: IProjectObject): void {
   if ("electronAPI" in window) {
-    alert("a");
-    window.electronAPI.createModel(modelObject);
+    window.electronAPI.createModel(projectObject);
   } else if ("parent" in window) {
     (window as Window).parent.postMessage({
       messageType: "add-project",
-      project: modelObject
+      project: projectObject
     });
   }
 }

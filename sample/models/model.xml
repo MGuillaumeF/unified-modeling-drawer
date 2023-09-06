@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
+  <name>Hangman-Game-Model</name>
+  <description>A Model to manage data of hangman game</description>
+  <version>1</version>
+  <creation_date>1690337861112</creation_date>
+  <last_update_date>1690337870891</last_update_date>
   <view>
     <diagram type="class" name="Hangman-Class-Diagram">
       <card type="class" name="root_model_object" x="200" y="100" />
@@ -14,11 +19,6 @@
     </diagram>
   </view>
   <model>
-    <name>Hangman-Game-Model</name>
-    <description>A Model to manage data of hangman game</description>
-    <version>1</version>
-    <creationDate>1690337861112</creationDate>
-    <lastUpdateDate>1690337870891</lastUpdateDate>
     <class name="root_model_object" abstract="true">
       <attribute
         name="version"

@@ -1,32 +1,32 @@
 import React from "react";
-import ModelObject from "../../../.model/ModelObject";
+import ProjectObject from "../../../.model/ProjectObject";
 import Button from "../../BasicButton/Button";
 import BasicInput from "../../BasicInput/BasicInput";
 import Details from "../../Details/Details";
-import style from "./ImportModelForm.scss";
+import style from "./ImportProjectForm.scss";
 
 type Props = {
-  models: ModelObject[];
+  projects: ProjectObject[];
 };
 
-function ImportModelForm({ models }: Props) {
+function ImportProjectForm({ projects }: Props) {
   return (
     <>
       <h2>Aperçu des projets à importer</h2>
-      {models.map((model: ModelObject) => (
+      {projects.map((project: ProjectObject) => (
         <Details
-          id={model.name}
-          key={model.name}
+          id={project.name}
+          key={project.name}
           open={false}
-          summaryChild={<>{model.name}</>}
+          summaryChild={<>{project.name}</>}
         >
           <ul>
-            <li>Projet : {model.name}</li>
-            <li>Version : {model.version}</li>
-            <li>Description : {model.description}</li>
-            <li>Date de création : {model.creationDate.toLocaleString()}</li>
+            <li>Projet : {project.name}</li>
+            <li>Version : {project.version}</li>
+            <li>Description : {project.description}</li>
+            <li>Date de création : {project.creationDate.toLocaleString()}</li>
             <li>
-              Dernière mise à jour : {model.lastUpdateDate.toLocaleString()}
+              Dernière mise à jour : {project.lastUpdateDate.toLocaleString()}
             </li>
           </ul>
         </Details>
@@ -46,4 +46,4 @@ function ImportModelForm({ models }: Props) {
   );
 }
 
-export default ImportModelForm;
+export default ImportProjectForm;

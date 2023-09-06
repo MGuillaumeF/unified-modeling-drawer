@@ -1,5 +1,5 @@
 import { BrowserWindow, app } from "electron";
-import ModelObject, { IModelObject } from "src/.model/ModelObject";
+import ProjectObject, { IProjectObject } from "../.model/ProjectObject";
 import { getEditMenuTemplate } from "./edit";
 import { getFileMenuTemplate } from "./file";
 import { getHelpMenuTemplate } from "./help";
@@ -8,15 +8,15 @@ import { getWindowMenuTemplate } from "./window";
 
 export function getMenuTemplate(
   win: BrowserWindow,
-  displayedModelUpdater: (
+  displayedProjectUpdater: (
     win: BrowserWindow,
-    modelObject: IModelObject
+    projectObject: IProjectObject
   ) => void,
-  displayedModel?: ModelObject
+  displayedProject?: ProjectObject
 ): (Electron.MenuItemConstructorOptions | Electron.MenuItem)[] {
   const template: (Electron.MenuItemConstructorOptions | Electron.MenuItem)[] =
     [
-      getFileMenuTemplate(win, displayedModelUpdater, displayedModel),
+      getFileMenuTemplate(win, displayedProjectUpdater, displayedProject),
       getEditMenuTemplate(win),
       getViewMenuTemplate(win),
       getWindowMenuTemplate(win),

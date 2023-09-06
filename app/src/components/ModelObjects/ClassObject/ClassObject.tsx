@@ -10,6 +10,7 @@ export type ClassObjectProps = {
   attributes: Array<AttributeObjectProps>;
   isAbstract: boolean;
   name: string;
+  onMove?: (x: number, y: number) => void;
   x?: number;
   y?: number;
 };
@@ -35,7 +36,8 @@ function ClassObject({
   name,
   isAbstract,
   x,
-  y
+  y,
+  onMove
 }: ClassObjectProps): React.JSX.Element {
   const [pos, setPos] = useState({ x: x ?? 0, y: y ?? 0 });
   const [state, setState] = useState({ x: x ?? 0, y: y ?? 0 });
@@ -47,7 +49,7 @@ function ClassObject({
       draggable="true"
       className={style.ClassObject}
       onMouseDown={getOnMouseDown(setPos)}
-      onDragEnd={getOnDragEnd(setState, pos)}
+      onDragEnd={getOnDragEnd(setState, pos, onMove)}
       onKeyUp={getOnKeyUp(name, callDelete, callEdit)}
     >
       <thead>

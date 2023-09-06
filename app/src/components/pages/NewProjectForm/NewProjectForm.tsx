@@ -1,12 +1,12 @@
 import React, { FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import ModelObject, { IModelObject } from "../../../.model/ModelObject";
+import ProjectObject, { IProjectObject } from "../../../.model/ProjectObject";
 import Button from "../../BasicButton/Button";
 import BasicInput from "../../BasicInput/BasicInput";
-import style from "./NewModelForm.scss";
+import style from "./NewProjectForm.scss";
 
 function getOnSubmit(
-  addModelObject: (modelObject: IModelObject) => void
+  addProjectObject: (projectObject: IProjectObject) => void
 ): (event: FormEvent<HTMLFormElement>) => void {
   return (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -31,27 +31,28 @@ function getOnSubmit(
 
     const name = formData.get("name") ?? "";
     const description = formData.get("description") ?? "";
-    const modelObject = new ModelObject({
+    const projectObject = new ProjectObject({
       name,
       description,
       version: "1.0.0",
       creationDate: new Date(),
       lastUpdateDate: new Date(),
-      classModelObjects: []
+      modelObject: { classModelObjects: [] },
+      viewObject: { diagramObjects: [] }
     });
-    addModelObject(modelObject.toObject());
+    addProjectObject(projectObject.toObject());
   };
 }
 
 const inputProperties = { required: true };
 
-function NewModelForm(props: {
-  addModelObject: (modelObject: IModelObject) => void;
+function NewProjectForm(props: {
+  addProjectObject: (projectObject: IProjectObject) => void;
 }) {
   const { t } = useTranslation();
   return (
     <div className={style.NewModelForm}>
-      <form action="" onSubmit={getOnSubmit(props.addModelObject)}>
+      <form action="" onSubmit={getOnSubmit(props.addProjectObject)}>
         <BasicInput
           id="new-project-name"
           type="text"
@@ -77,4 +78,4 @@ function NewModelForm(props: {
   );
 }
 
-export default NewModelForm;
+export default NewProjectForm;

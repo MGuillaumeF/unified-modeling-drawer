@@ -4,9 +4,9 @@ import { BrowserWindow, Menu, Tray, app, ipcMain } from "electron";
 import fs from "fs";
 import i18next from "i18next";
 import { join as pathJoin } from "path";
-import ModelObject, { IModelObject } from "./.model/ModelObject";
-import { getMenuTemplate } from "./menu";
+import ProjectObject, { IProjectObject } from "./.model/ProjectObject";
 import ConfigurationManager from "./ConfigurationManager";
+import { getMenuTemplate } from "./menu";
 
 const ICON_EXT = process.platform === "win32" ? "ico" : "png";
 const RESOURCES_PATH = pathJoin(__dirname, "./resources");
@@ -20,10 +20,10 @@ let iconPath = trayIconPath;
 let win: BrowserWindow | null = null;
 // save close state to no exit if close is asked, but hide window
 let isQuiting = false;
-let displayedModel: ModelObject | undefined;
+let displayedProject: ProjectObject | undefined;
 const configurationManager = ConfigurationManager.getInstance();
 
-// la focntion de création de la fenêtre Chromium
+// la fonction de création de la fenêtre Chromium
 function createWindow(): BrowserWindow {
   // Création de la fenêtre navigateur Chromium
   const win = new BrowserWindow({
@@ -52,14 +52,14 @@ function createWindow(): BrowserWindow {
   });
   ipcMain.on(
     "create-model",
-    (event: Electron.IpcMainEvent, modelObject: IModelObject) => {
-      displayedModel = new ModelObject(modelObject);
+    (event: Electron.IpcMainEvent, projectObject: IProjectObject) => {
+      displayedProject = new ProjectObject(projectObject);
       win.setTitle(
-        process.env["npm_package_name"] + " - " + displayedModel.name
+        process.env["npm_package_name"] + " - " + displayedProject.name
       );
 
       const menu = Menu.buildFromTemplate(
-        getMenuTemplate(win, displayedModelUpdater, displayedModel)
+        getMenuTemplate(win, displayedProjectUpdater, displayedProject)
       );
       Menu.setApplicationMenu(menu);
     }
@@ -82,7 +82,7 @@ function createWindow(): BrowserWindow {
   ]);
 
   const menu = Menu.buildFromTemplate(
-    getMenuTemplate(win, displayedModelUpdater, displayedModel)
+    getMenuTemplate(win, displayedProjectUpdater, displayedProject)
   );
   Menu.setApplicationMenu(menu);
 
@@ -116,7 +116,7 @@ i18next
       const localWin = createWindow();
       i18next.on("languageChanged", (lng: string) => {
         const menu = Menu.buildFromTemplate(
-          getMenuTemplate(localWin, displayedModelUpdater, displayedModel)
+          getMenuTemplate(localWin, displayedProjectUpdater, displayedProject)
         );
         Menu.setApplicationMenu(menu);
       });
@@ -141,15 +141,15 @@ i18next
     });
   });
 
-function displayedModelUpdater(
+function displayedProjectUpdater(
   win: BrowserWindow,
-  modelObject: IModelObject
+  projectObject: IProjectObject
 ): void {
-  displayedModel = new ModelObject(modelObject);
-  win.setTitle(process.env["npm_package_name"] + " - " + displayedModel.name);
+  displayedProject = new ProjectObject(projectObject);
+  win.setTitle(process.env["npm_package_name"] + " - " + displayedProject.name);
 
   const menu = Menu.buildFromTemplate(
-    getMenuTemplate(win, displayedModelUpdater, displayedModel)
+    getMenuTemplate(win, displayedProjectUpdater, displayedProject)
   );
   Menu.setApplicationMenu(menu);
 }

@@ -2,9 +2,8 @@ import { IpcRendererEvent } from "electron";
 import React, { useState } from "react";
 import AttributeModelObject from "src/.model/AttributeModelObject";
 import ClassModelObject from "src/.model/ClassModelObject";
-import DiagramObject from "../../.model/DiagramObject";
-import ModelObject, { IModelObject } from "../../.model/ModelObject";
-import ViewObject, { IViewObject } from "../../.model/ViewObject";
+import DiagramObject, { Card } from "../../.model/DiagramObject";
+import ProjectObject, { IProjectObject } from "../../.model/ProjectObject";
 import HistoryManager from "../../HistoryManager/HistoryManager";
 import ClassObject, {
   ClassObjectProps
@@ -32,38 +31,32 @@ function classModelObjectToProps(
 }
 
 export function ModelDrawArea(): React.JSX.Element {
-  const [classModelObjectList, setClassModelObjectList] = useState<
-    Array<ClassModelObject>
-  >([]);
-  const [diagramObjectList, setDiagramObjectList] = useState<
-    Array<DiagramObject>
-  >([]);
+  const [projectObject, setProjectObject] = useState<ProjectObject | null>(
+    null
+  );
 
   if ("electronAPI" in window) {
     window.electronAPI.handleOpenFile(
-      (
-        event: IpcRendererEvent,
-        model: IModelObject,
-        view: IViewObject
-      ): void => {
-        const modelObject = new ModelObject(model);
-        const viewObject = new ViewObject(view);
-        console.log(event, model, modelObject);
-        setClassModelObjectList(modelObject.classModelObjects);
-        setDiagramObjectList(viewObject.diagrams);
+      (event: IpcRendererEvent, project: IProjectObject): void => {
+        setProjectObject(new ProjectObject(project));
       }
     );
   }
-
+  const diagrams: DiagramObject[] = projectObject
+    ? projectObject.viewObject.diagrams
+    : [];
   return (
     <>
-      {diagramObjectList.map((diagramObject: DiagramObject): JSX.Element => {
+      {diagrams.map((diagramObject: DiagramObject): JSX.Element => {
         return (
           <div key={diagramObject.name}>
             <h2>{diagramObject.name}</h2>
             <div onDragOver={getOnDragOver}>
               {diagramObject.cards.map((item): JSX.Element => {
-                const classObject = classModelObjectList.find(
+                const classclassObjects: ClassModelObject[] = projectObject
+                  ? projectObject.modelObject.classModelObjects
+                  : [];
+                const classObject = classclassObjects.find(
                   (classObject: ClassModelObject): boolean =>
                     item.name === classObject.name
                 );
@@ -78,6 +71,12 @@ export function ModelDrawArea(): React.JSX.Element {
                     y={item.y}
                     isAbstract={convertedClassObject.isAbstract}
                     attributes={convertedClassObject.attributes}
+                    onMove={getUpdatePosition(
+                      projectObject,
+                      setProjectObject,
+                      diagramObject.name,
+                      convertedClassObject.name
+                    )}
                   />
                 ) : (
                   <></>
@@ -89,4 +88,29 @@ export function ModelDrawArea(): React.JSX.Element {
       })}
     </>
   );
+}
+
+function getUpdatePosition(
+  projectObject: ProjectObject | null,
+  updater: React.Dispatch<React.SetStateAction<ProjectObject | null>>,
+  diagramName: string,
+  cardName: string
+): (x: number, y: number) => void {
+  return (x: number, y: number): void => {
+    if (projectObject) {
+      const diagramToUpdate = projectObject.viewObject.diagrams.find(
+        (diagram: DiagramObject): boolean => diagram.name === diagramName
+      );
+      if (diagramToUpdate) {
+        const cardToUpdate = diagramToUpdate.cards.find(
+          (card: Card) => card.name === cardName
+        );
+        if (cardToUpdate) {
+          cardToUpdate.x = x;
+          cardToUpdate.y = y;
+          updater(new ProjectObject(projectObject.toObject()));
+        }
+      }
+    }
+  };
 }
