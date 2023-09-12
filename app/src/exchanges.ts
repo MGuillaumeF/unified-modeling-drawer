@@ -7,6 +7,6 @@ export function add(projectObject: IProjectObject): void {
     (window as Window).parent.postMessage({
       messageType: "add-project",
       project: projectObject
-    });
+    }, window.origin);
   }
 }
