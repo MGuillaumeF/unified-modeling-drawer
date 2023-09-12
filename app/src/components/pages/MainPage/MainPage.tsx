@@ -15,7 +15,7 @@ function getAddProjectOnClick(updater: (addValue: string) => void) {
       child.addEventListener(
         "message",
         (event) => {
-          if (event.orgin !== window.origin) return;
+          if (event.origin !== window.origin) return;
           console.log("herer", event);
           if (event.data.project) {
             updater(event.data.project.name);
