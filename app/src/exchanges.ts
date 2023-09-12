@@ -9,7 +9,7 @@ export function add(projectObject: IProjectObject): void {
         messageType: "add-project",
         project: projectObject
       },
-      window.origin
+      (window as Window).origin
     );
   }
 }
