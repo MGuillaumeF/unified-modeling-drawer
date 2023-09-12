@@ -98,7 +98,6 @@ export default class ClassModelObject extends DraggableModelObjet {
     attribute: Array<
       | { $: IFileAttributeModelEntry }
       | { $: IFileStringAttributeModelEntry }
-      | { $: IFileAttributeModelEntry }
       | { $: IFileNumberAttributeModelEntry }
       | { $: IFileDateAttributeModelEntry }
     >;
@@ -117,7 +116,6 @@ export default class ClassModelObject extends DraggableModelObjet {
     attribute: Array<
       | { $: IFileAttributeModelEntry }
       | { $: IFileStringAttributeModelEntry }
-      | { $: IFileAttributeModelEntry }
       | { $: IFileNumberAttributeModelEntry }
       | { $: IFileDateAttributeModelEntry }
     >;
@@ -131,7 +129,6 @@ export default class ClassModelObject extends DraggableModelObjet {
           attr:
             | { $: IFileAttributeModelEntry }
             | { $: IFileStringAttributeModelEntry }
-            | { $: IFileAttributeModelEntry }
             | { $: IFileNumberAttributeModelEntry }
             | { $: IFileDateAttributeModelEntry }
         ):
