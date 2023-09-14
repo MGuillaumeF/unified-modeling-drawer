@@ -73,8 +73,8 @@
     "publish": null
   },
   "browserslist": {
-    "production": ["> 5%", "not dead", "last 2 versions", "not op_mini all", "not IE 11"],
-    "development": ["> 5%", "not dead", "last 2 versions", "not op_mini all", "not IE 11"]
+    "production": ["> 5% and not dead and last 2 versions"],
+    "development": ["> 5% and not dead and last 2 versions"]
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.11.0",
