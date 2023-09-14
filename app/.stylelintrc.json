@@ -28,7 +28,8 @@
       true,
       {
         "severity": "warning"
-      }
+      },
+      "ignore" : ["css-nesting"]
     ],
     "unit-case": "lower"
   }
