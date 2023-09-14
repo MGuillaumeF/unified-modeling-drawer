@@ -28,7 +28,7 @@
       true,
       {
         "severity": "warning",
-        "ignore" : ["css-nesting"]
+        "ignore": ["css-nesting"]
       }
     ],
     "unit-case": "lower"
