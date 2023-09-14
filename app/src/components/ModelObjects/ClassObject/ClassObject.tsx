@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import React, { useState } from "react";
+import React, { CSSProperties, useState } from "react";
 import AttributeObject, {
   AttributeObjectProps
 } from "../AttributeObject/AttributeObject";
@@ -10,6 +10,9 @@ export type ClassObjectProps = {
   attributes: Array<AttributeObjectProps>;
   isAbstract: boolean;
   name: string;
+  onMove?: (x: number, y: number) => void;
+  x?: number;
+  y?: number;
 };
 
 function callDelete(classObjectName: string): void {
@@ -24,17 +27,20 @@ function callEdit(classObjectName: string): void {
   alert(i18next.t("TODO_OPEN_EDIT_OBJECT_WINDOW"));
 }
 
-function getStyle(x: number, y: number): { left: number; top: number } {
-  return { top: y, left: x };
+function getStyle(x: number, y: number): CSSProperties {
+  return { top: `${y}px`, left: `${x}px` };
 }
 
 function ClassObject({
   attributes,
   name,
-  isAbstract
+  isAbstract,
+  x,
+  y,
+  onMove
 }: ClassObjectProps): React.JSX.Element {
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-  const [state, setState] = useState({ x: 0, y: 0 });
+  const [pos, setPos] = useState({ x: x ?? 0, y: y ?? 0 });
+  const [state, setState] = useState({ x: x ?? 0, y: y ?? 0 });
 
   return (
     <table
@@ -43,7 +49,7 @@ function ClassObject({
       draggable="true"
       className={style.ClassObject}
       onMouseDown={getOnMouseDown(setPos)}
-      onDragEnd={getOnDragEnd(setState, pos)}
+      onDragEnd={getOnDragEnd(setState, pos, onMove)}
       onKeyUp={getOnKeyUp(name, callDelete, callEdit)}
     >
       <thead>

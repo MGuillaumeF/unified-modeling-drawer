@@ -8,12 +8,15 @@ type Props = {
   label: string;
   labelProperties?: HTMLProps<HTMLLabelElement>;
   name: string;
-  type: "email" | "text" | "password";
+  type: "email" | "text" | "password" | "number" | "file";
 };
 
 const BasicInput = (props: Props) => {
   return (
     <div className={style.BasicInput} {...props.containerProperties}>
+      <label htmlFor={props.id} {...props.labelProperties}>
+        {props.label}
+      </label>
       <input
         name={props.name}
         id={props.id}
@@ -21,9 +24,6 @@ const BasicInput = (props: Props) => {
         type={props.type}
         {...props.inputProperties}
       />
-      <label htmlFor={props.id} {...props.labelProperties}>
-        {props.label}
-      </label>
     </div>
   );
 };

@@ -1,7 +1,6 @@
 declare namespace ButtonScssNamespace {
   export interface IButtonScss {
     mocor: string;
-    outline: string;
     primary: string;
     secondary: string;
     tertiary: string;

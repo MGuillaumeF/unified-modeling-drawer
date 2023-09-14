@@ -2,7 +2,7 @@ import { BrowserWindow, dialog } from "electron";
 import { readFileSync, writeFileSync } from "fs";
 import { t } from "i18next";
 import { Builder, Parser } from "xml2js";
-import ModelObject, { IModelObject } from "../.model/ModelObject";
+import ProjectObject, { IProjectObject } from "../.model/ProjectObject";
 import NewModelWindow from "../NewModelWindow/NewModelWindow";
 
 /**
@@ -14,11 +14,11 @@ import NewModelWindow from "../NewModelWindow/NewModelWindow";
  */
 export function getFileMenuTemplate(
   win: BrowserWindow,
-  displayedModelUpdater: (
+  displayedProjectUpdater: (
     win: BrowserWindow,
-    modelObject: IModelObject
+    projectObject: IProjectObject
   ) => void,
-  displayedModel?: ModelObject
+  displayedProject?: ProjectObject
 ): Electron.MenuItemConstructorOptions | Electron.MenuItem {
   return {
     label: t("MENU.FILE.LABEL"),
@@ -53,9 +53,9 @@ export function getFileMenuTemplate(
                     xmlContent,
                     function (error: Error | null, result: any): void {
                       // convert to ModelObject here before send to html application
-                      const modelObject = ModelObject.parse(result.model);
-                      displayedModelUpdater(win, modelObject);
-                      win.webContents.send("file-open", modelObject);
+                      const projectObject = ProjectObject.parse(result.project);
+                      displayedProjectUpdater(win, projectObject);
+                      win.webContents.send("file-open", projectObject);
                     }
                   );
                 }
@@ -70,14 +70,14 @@ export function getFileMenuTemplate(
       {
         label: t("MENU.FILE.SUBMENU.SAVE.LABEL"),
         accelerator: "CmdOrCtrl+S",
-        enabled: Boolean(displayedModel),
+        enabled: Boolean(displayedProject),
         click() {
-          if (displayedModel) {
-            const data = displayedModel.toObject();
+          if (displayedProject) {
+            const data = displayedProject.toObject();
             if (data.sourcePath !== undefined) {
-              save(data as Required<IModelObject>);
+              save(data as Required<IProjectObject>);
             } else {
-              saveAs(displayedModel);
+              saveAs(displayedProject);
             }
           }
         }
@@ -85,16 +85,16 @@ export function getFileMenuTemplate(
       {
         label: t("MENU.FILE.SUBMENU.SAVE_AS.LABEL"),
         accelerator: "CmdOrCtrl+Alt+S",
-        enabled: Boolean(displayedModel),
+        enabled: Boolean(displayedProject),
         click() {
-          if (displayedModel) {
-            saveAs(displayedModel);
+          if (displayedProject) {
+            saveAs(displayedProject);
           }
         }
       },
       {
         label: t("MENU.FILE.SUBMENU.EXPORT_AS.LABEL"),
-        enabled: Boolean(displayedModel)
+        enabled: Boolean(displayedProject)
       },
       {
         label: t("MENU.FILE.SUBMENU.EXIT.LABEL"),
@@ -106,9 +106,9 @@ export function getFileMenuTemplate(
 
 /**
  * Function to save file with custom path
- * @param modelToSave The model to Save
+ * @param projectToSave The project to Save
  */
-function saveAs(modelToSave: ModelObject) {
+function saveAs(projectToSave: ProjectObject) {
   // construct the save file dialog
   dialog
     .showSaveDialog({
@@ -117,12 +117,12 @@ function saveAs(modelToSave: ModelObject) {
     .then(function (fileObj: Electron.SaveDialogReturnValue) {
       const { filePath } = fileObj;
       if (!fileObj.canceled && filePath) {
-        modelToSave.sourcePath = filePath;
-        const modelToSaveFilled: Required<IModelObject> = {
-          ...modelToSave.toObject(),
+        projectToSave.sourcePath = filePath;
+        const projectToSaveFilled: Required<IProjectObject> = {
+          ...projectToSave.toObject(),
           sourcePath: filePath
         };
-        save(modelToSaveFilled);
+        save(projectToSaveFilled);
       }
     })
     // should always handle the error yourself, later Electron release might crash if you don't
@@ -133,13 +133,13 @@ function saveAs(modelToSave: ModelObject) {
 
 /**
  * Function to save file with custom path
- * @param modelToSave The model to Save
+ * @param projectToSave The project to Save
  */
-function save(modelToSave: Required<IModelObject>) {
-  modelToSave.lastUpdateDate = new Date();
+function save(projectToSave: Required<IProjectObject>) {
+  projectToSave.lastUpdateDate = new Date();
   const builder = new Builder({ rootName: "model" });
-  const obj = new ModelObject(modelToSave).toPrint();
+  const obj = new ProjectObject(projectToSave).toPrint();
   // remove sourcePath before write on disk
   // convert all dates to timestamp before write on disk
-  writeFileSync(modelToSave.sourcePath, builder.buildObject(obj));
+  writeFileSync(projectToSave.sourcePath, builder.buildObject(obj));
 }

@@ -93,11 +93,19 @@ export default class ClassModelObject extends DraggableModelObjet {
       attributes: this._attributes.map((attribute) => attribute.toObject())
     };
   }
-  public toPrint() {
+  public toPrint(): {
+    $: IFileClassModelEntry;
+    attribute: Array<
+      | { $: IFileAttributeModelEntry }
+      | { $: IFileStringAttributeModelEntry }
+      | { $: IFileNumberAttributeModelEntry }
+      | { $: IFileDateAttributeModelEntry }
+    >;
+  } {
     return {
       $: {
         name: this._name,
-        abstract: this._isAbstract
+        abstract: this._isAbstract ? "true" : "false"
       },
       attribute: this._attributes.map((attribute) => attribute.toPrint())
     };
@@ -108,7 +116,6 @@ export default class ClassModelObject extends DraggableModelObjet {
     attribute: Array<
       | { $: IFileAttributeModelEntry }
       | { $: IFileStringAttributeModelEntry }
-      | { $: IFileAttributeModelEntry }
       | { $: IFileNumberAttributeModelEntry }
       | { $: IFileDateAttributeModelEntry }
     >;
@@ -122,7 +129,6 @@ export default class ClassModelObject extends DraggableModelObjet {
           attr:
             | { $: IFileAttributeModelEntry }
             | { $: IFileStringAttributeModelEntry }
-            | { $: IFileAttributeModelEntry }
             | { $: IFileNumberAttributeModelEntry }
             | { $: IFileDateAttributeModelEntry }
         ):
