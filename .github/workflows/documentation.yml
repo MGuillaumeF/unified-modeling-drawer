@@ -1,0 +1,40 @@
+name: UNIFIED MODELING DRAWER - DOCUMENTATION
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches:
+      - main
+      - develop
+      - delivery
+      
+jobs:
+  documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+
+      - name: Install md2htmlpdf
+        working-directory: ${{github.workspace}}
+        run: |
+          wget https://github.com/ValeryBruniaux/md2htmlpdf/releases/download/1.11/md2htmlpdf.tar.gz
+          tar xvfz md2htmlpdf-1.11.tar.gz
+          cd md2htmlpdf-1.11.tar.gz
+          sh install.sh
+      
+      - name: Install dependencies
+        working-directory: ${{github.workspace}}
+        run: sudo apt-get install pandoc open-ssl fontconfig libssl-dev
+
+      - name: Install wkhtmltopdf
+        working-directory: ${{github.workspace}}
+        run: |
+          wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_arm64.deb
+          sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_arm64.deb
+          wkhtmltopdf -version
+        
