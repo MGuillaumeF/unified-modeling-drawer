@@ -29,7 +29,7 @@ jobs:
       
       - name: Install dependencies
         working-directory: ${{github.workspace}}
-        run: sudo apt-get install pandoc open-ssl fontconfig libssl-dev
+        run: sudo apt-get install pandoc fontconfig libssl-dev
 
       - name: Install wkhtmltopdf
         working-directory: ${{github.workspace}}
