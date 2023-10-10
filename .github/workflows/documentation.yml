@@ -34,7 +34,7 @@ jobs:
       - name: Install wkhtmltopdf
         working-directory: ${{github.workspace}}
         run: |
-          wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_arm64.deb
-          sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_arm64.deb
+          wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+          sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb
           wkhtmltopdf -version
         
