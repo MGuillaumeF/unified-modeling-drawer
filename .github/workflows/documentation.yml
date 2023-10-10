@@ -23,9 +23,8 @@ jobs:
         working-directory: ${{github.workspace}}
         run: |
           wget https://github.com/ValeryBruniaux/md2htmlpdf/releases/download/1.11/md2htmlpdf.tar.gz
-          ls
-          tar xvfz md2htmlpdf-1.11.tar.gz
-          cd md2htmlpdf-1.11.tar.gz
+          tar xvfz md2htmlpdf.tar.gz
+          cd md2htmlpdf.tar.gz
           sh install.sh
       
       - name: Install dependencies
