@@ -6,5 +6,14 @@
 2. Installation
 3. Description de l'interface graphique
 4. Modélisation de diagramme
-   1. Diagramme de classe
 5. Géneration de code
+
+## Pré-requis
+
+## Installation
+
+## Description de l'interface graphique
+
+## Modélisation de diagramme
+
+## Géneration de code
