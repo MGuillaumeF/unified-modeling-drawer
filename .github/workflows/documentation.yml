@@ -38,3 +38,13 @@ jobs:
           sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb
           wkhtmltopdf --version
         
+      - name: Generate User Manual FR
+        working-directory: ${{github.workspace}}/documentation/user-manual/fr/
+        run: md2htmlpdf manuel-utilisateur.md
+
+      - name: Archive UserManual FR
+        uses: actions/upload-artifact@v2
+        with:
+          name: manuel-utilisateur
+          path: ${{github.workspace}}/documentation/user-manual/fr/
+        
