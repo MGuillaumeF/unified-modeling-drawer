@@ -13,5 +13,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.on("language", callback);
   },
   createModel: (model: ModelObject): void =>
-    ipcRenderer.send("create-model", model)
+    ipcRenderer.send("create-model", model),
+  updateModel: (model: ModelObject): void =>
+    ipcRenderer.send("update-model", model)
 });

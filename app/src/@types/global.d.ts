@@ -14,6 +14,7 @@ interface ElectronAPI {
       viewObject: IViewObject
     ) => void
   ) => void;
+  updateModel: (model: ModelObject) => void;
 }
 
 declare global {

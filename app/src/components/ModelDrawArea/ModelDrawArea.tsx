@@ -5,6 +5,7 @@ import ClassModelObject from "src/.model/ClassModelObject";
 import DiagramObject, { Card } from "../../.model/DiagramObject";
 import ProjectObject, { IProjectObject } from "../../.model/ProjectObject";
 import HistoryManager from "../../HistoryManager/HistoryManager";
+import { update } from "../../exchanges";
 import ClassObject, {
   ClassObjectProps
 } from "../ModelObjects/ClassObject/ClassObject";
@@ -108,7 +109,10 @@ function getUpdatePosition(
         if (cardToUpdate) {
           cardToUpdate.x = x;
           cardToUpdate.y = y;
-          updater(new ProjectObject(projectObject.toObject()));
+          // remplacer l'appel de updater par une propagation d'action "from/to"
+          // pour une prise en compte générique dans la mise à jour de l'objet
+          // il n'est pas nécessaire de mettre à jour le state qui ne change que sur ouverture d'un nouveau projet
+          update(projectObject.toObject());
         }
       }
     }

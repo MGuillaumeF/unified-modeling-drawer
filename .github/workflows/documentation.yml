@@ -9,7 +9,7 @@ on:
       - main
       - develop
       - delivery
-      
+
 jobs:
   documentation:
     runs-on: ubuntu-latest
@@ -26,7 +26,7 @@ jobs:
           tar xvfz md2htmlpdf.tar.gz
           cd md2htmlpdf
           sh install.sh
-      
+
       - name: Install dependencies
         working-directory: ${{github.workspace}}
         run: sudo apt-get install pandoc fontconfig libssl-dev xfonts-75dpi xfonts-base
@@ -37,7 +37,7 @@ jobs:
           wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
           sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb
           wkhtmltopdf --version
-        
+
       - name: Generate User Manual FR
         working-directory: ${{github.workspace}}/documentation/user-manual/fr/
         run: md2htmlpdf manuel-utilisateur.md
@@ -47,4 +47,3 @@ jobs:
         with:
           name: manuel-utilisateur
           path: ${{github.workspace}}/documentation/user-manual/fr/
-        

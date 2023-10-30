@@ -9,23 +9,23 @@ on:
       - main
       - develop
       - delivery
-      
+
 jobs:
   clear:
     runs-on: ubuntu-latest
     name: A job to delete old workflow runs
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Delete workflow runs
-      uses: MajorScruffy/delete-old-workflow-runs@v0.3.0
-      with:
-        repository: MGuillaumeF/unified-modeling-drawer
-        older-than-seconds: 86400   
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
+      - name: Delete workflow runs
+        uses: MajorScruffy/delete-old-workflow-runs@v0.3.0
+        with:
+          repository: MGuillaumeF/unified-modeling-drawer
+          older-than-seconds: 86400
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   windows:
     runs-on: windows-latest
     steps:
@@ -45,13 +45,13 @@ jobs:
       - name: Build Packaging
         working-directory: ${{github.workspace}}
         run: npm run el:package --windows
-         
+
       - name: Archive Packages
         uses: actions/upload-artifact@v2
         with:
           name: UMD-distribution-win
           path: ${{github.workspace}}/dist
-        
+
   sonarcloud-analyse:
     runs-on: ubuntu-latest
     permissions: write-all
@@ -78,7 +78,7 @@ jobs:
           convert umd-16x16.png umd-32x32.png umd-48x48.png umd-256x256.png umd.ico
           cp umd-256x256.png ../icon.png
           cp umd.ico ../icon.ico
-  
+
       - name: Save icon changes
         if: ${{ github.event_name == 'pull_request' && github.actor != 'dependabot[bot]' }}
         working-directory: ${{github.workspace}}
@@ -104,15 +104,15 @@ jobs:
         if: ${{ github.event_name == 'pull_request' && github.actor != 'dependabot[bot]' }}
         working-directory: ${{github.workspace}}
         run: |
-         git stash
-         git checkout ${{github.head_ref}}
-         git stash pop || echo "Nothing in stashed stack"
-         git config user.name "MGuillaumeF"
-         git config user.email "${{secrets.EMAIL}}"
-         git add . || echo "No modification to add pop"
-         git reset .github || echo "No modification to reset"
-         (git commit -m "[AUTO] prettier format write" && git push) || echo 'No modification to save'
-         
+          git stash
+          git checkout ${{github.head_ref}}
+          git stash pop || echo "Nothing in stashed stack"
+          git config user.name "MGuillaumeF"
+          git config user.email "${{secrets.EMAIL}}"
+          git add . || echo "No modification to add pop"
+          git reset .github || echo "No modification to reset"
+          (git commit -m "[AUTO] prettier format write" && git push) || echo 'No modification to save'
+
       - name: Build App
         working-directory: ${{github.workspace}}
         run: npm run build:app
@@ -120,21 +120,21 @@ jobs:
       - name: Build Packaging
         working-directory: ${{github.workspace}}
         run: npm run el:package --linux
-          
+
       - name: Archive Packages
         uses: actions/upload-artifact@v2
         with:
           name: UMD-distribution-linux
           path: ${{github.workspace}}/dist
-        
+
       - name: Run Tests
         working-directory: ${{github.workspace}}
         run: npm run unit:test:packaging
-        
+
       - name: Print summary coverage
         working-directory: ${{github.workspace}}
         run: npx nyc report --reporter=lcov --reporter=text-summary
-      
+
       - name: ESlint analyze json
         working-directory: ${{github.workspace}}
         run: npm run lint:eslint:json || echo FAILED
@@ -142,11 +142,11 @@ jobs:
       - name: ESlint analyze html
         working-directory: ${{github.workspace}}
         run: npm run lint:eslint || echo FAILED
-        
+
       - name: Audit dependency
         working-directory: ${{github.workspace}}
         run: npm audit --json > ./dist/reports/audit-dependency-report.json || echo FAILED
-        
+
       - name: Stylelint analyze
         working-directory: ${{github.workspace}}
         run: npm run lint:stylelint

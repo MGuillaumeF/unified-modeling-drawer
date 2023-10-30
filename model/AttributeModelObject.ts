@@ -84,12 +84,15 @@ export default class AttributeModelObject {
     return obj;
   }
   public toPrint(): { $: IFileAttributeModelEntry } {
-    const { defaultValue, mandatory, unique, ...raw } = this.toObject();
+    const { defaultValue, mandatory, unique, visibility, type, name } =
+      this.toObject();
     let mapped: { $: IFileAttributeModelEntry } = {
       $: {
-        ...raw,
         mandatory: mandatory ? "true" : "false",
-        unique: unique ? "true" : "false"
+        name,
+        type,
+        unique: unique ? "true" : "false",
+        visibility
       }
     };
     if (defaultValue !== undefined) {

@@ -137,7 +137,7 @@ function saveAs(projectToSave: ProjectObject) {
  */
 function save(projectToSave: Required<IProjectObject>) {
   projectToSave.lastUpdateDate = new Date();
-  const builder = new Builder({ rootName: "model" });
+  const builder = new Builder({ rootName: "project" });
   const obj = new ProjectObject(projectToSave).toPrint();
   // remove sourcePath before write on disk
   // convert all dates to timestamp before write on disk

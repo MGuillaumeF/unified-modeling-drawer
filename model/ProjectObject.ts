@@ -97,8 +97,8 @@ export default class ProjectObject {
       version: this._version,
       creation_date: this._creationDate.getTime(),
       last_update_date: this._lastUpdateDate.getTime(),
-      model: this._modelObject.toPrint(),
-      view: this._viewObject.toPrint()
+      view: this._viewObject.toPrint(),
+      model: this._modelObject.toPrint()
     };
   }
   public static parse = (entry: IFileProjectEntry): IProjectObject => {
@@ -106,10 +106,10 @@ export default class ProjectObject {
       name: entry.name[0] ?? "",
       version: entry.version[0] ?? "1.0.0",
       description: entry.description[0] ?? "",
-      lastUpdateDate: new Date(Number(entry.last_update_date)),
       creationDate: new Date(Number(entry.creation_date)),
-      modelObject: ModelObject.parse(entry.model[0] ?? { class: [] }),
-      viewObject: ViewObject.parse(entry.view[0] ?? { diagram: [] })
+      lastUpdateDate: new Date(Number(entry.last_update_date)),
+      viewObject: ViewObject.parse(entry.view[0] ?? { diagram: [] }),
+      modelObject: ModelObject.parse(entry.model[0] ?? { class: [] })
     };
     return modelObject;
   };

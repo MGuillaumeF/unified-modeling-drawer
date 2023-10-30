@@ -6,16 +6,16 @@
   <creation_date>1690337861112</creation_date>
   <last_update_date>1690337870891</last_update_date>
   <view>
-    <diagram type="class" name="Hangman-Class-Diagram">
-      <card type="class" name="root_model_object" x="200" y="100" />
-      <card type="class" name="user" x="200" y="150" />
-      <card type="class" name="group" x="25" y="200" />
-      <card type="class" name="dictionary" x="400" y="100" />
-      <card type="class" name="word" x="400" y="100" />
-      <card type="class" name="party" x="400" y="100" />
-      <card type="class" name="chat" x="400" y="100" />
-      <card type="class" name="message" x="400" y="100" />
-      <card type="class" name="team" x="400" y="100" />
+    <diagram name="Hangman-Class-Diagram" type="class-diagram">
+      <card type="class" name="root_model_object" x="398" y="88" />
+      <card type="class" name="user" x="802" y="488" />
+      <card type="class" name="group" x="817" y="352" />
+      <card type="class" name="dictionary" x="82" y="639" />
+      <card type="class" name="word" x="83" y="484" />
+      <card type="class" name="party" x="101" y="295" />
+      <card type="class" name="chat" x="460" y="354" />
+      <card type="class" name="message" x="527" y="546" />
+      <card type="class" name="team" x="719" y="204" />
     </diagram>
   </view>
   <model>

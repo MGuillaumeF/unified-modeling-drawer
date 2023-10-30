@@ -23,7 +23,11 @@ let isQuiting = false;
 let displayedProject: ProjectObject | undefined;
 const configurationManager = ConfigurationManager.getInstance();
 
-// la fonction de création de la fenêtre Chromium
+if (process.platform === "win32") {
+  app.setAppUserModelId(app.name);
+}
+
+// la focntion de création de la fenêtre Chromium
 function createWindow(): BrowserWindow {
   // Création de la fenêtre navigateur Chromium
   const win = new BrowserWindow({
@@ -52,6 +56,20 @@ function createWindow(): BrowserWindow {
   });
   ipcMain.on(
     "create-model",
+    (event: Electron.IpcMainEvent, projectObject: IProjectObject) => {
+      displayedProject = new ProjectObject(projectObject);
+      win.setTitle(
+        process.env["npm_package_name"] + " - " + displayedProject.name
+      );
+
+      const menu = Menu.buildFromTemplate(
+        getMenuTemplate(win, displayedProjectUpdater, displayedProject)
+      );
+      Menu.setApplicationMenu(menu);
+    }
+  );
+  ipcMain.on(
+    "update-model",
     (event: Electron.IpcMainEvent, projectObject: IProjectObject) => {
       displayedProject = new ProjectObject(projectObject);
       win.setTitle(
