@@ -49,7 +49,7 @@ export function getOnKeyUp(
     const code = event.nativeEvent.code.toUpperCase();
     if (code === "DELETE") {
       callDelete(classObjectName);
-    } else if (event.nativeEvent.ctrlKey && code === "E") {
+    } else if (event.nativeEvent.ctrlKey && code === "KEYE") {
       callEdit(classObjectName);
     }
   };

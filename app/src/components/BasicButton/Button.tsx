@@ -1,7 +1,7 @@
 import React, { HTMLProps, ReactElement } from "react";
 import style from "./Button.scss";
 
-interface IButtonProps extends HTMLProps<HTMLButtonElement> {
+interface ButtonProps extends HTMLProps<HTMLButtonElement> {
   id: string;
   level?: "primary" | "secondary" | "tertiary";
   type: "button" | "submit" | "reset";
@@ -32,7 +32,7 @@ const levelMap = new Map<string, string>([
  * @param props
  * @returns
  */
-function Button(props: IButtonProps): ReactElement {
+function Button(props: Readonly<ButtonProps>): ReactElement {
   const { className, level } = props;
   return (
     <button {...props} className={loadCss({ className, level })}>

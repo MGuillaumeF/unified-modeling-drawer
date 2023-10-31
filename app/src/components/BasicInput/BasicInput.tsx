@@ -11,7 +11,7 @@ type Props = {
   type: "email" | "text" | "password" | "number" | "file";
 };
 
-const BasicInput = (props: Props) => {
+const BasicInput = (props: Readonly<Props>) => {
   return (
     <div className={style.BasicInput} {...props.containerProperties}>
       <label htmlFor={props.id} {...props.labelProperties}>

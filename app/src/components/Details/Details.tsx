@@ -17,7 +17,7 @@ interface DetailsProps {
  * @param props
  * @returns
  */
-function Details(props: DetailsProps): React.JSX.Element {
+function Details(props: Readonly<DetailsProps>): React.JSX.Element {
   return (
     <details
       id={props.id}

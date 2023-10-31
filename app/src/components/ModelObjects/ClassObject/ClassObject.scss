@@ -27,4 +27,9 @@
   &:hover {
     cursor: grab;
   }
+  &:focus,
+  &:focus-visible {
+    border: 2px solid #3f6cff;
+    border-radius: 0.2em;
+  }
 }

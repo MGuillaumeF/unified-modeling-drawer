@@ -8,7 +8,9 @@ export type AttributeObjectProps = {
   visibility: Visibility;
 };
 
-function AttributeObject(props: AttributeObjectProps): React.JSX.Element {
+function AttributeObject(
+  props: Readonly<AttributeObjectProps>
+): React.JSX.Element {
   return (
     <tr key={props.name}>
       <td>

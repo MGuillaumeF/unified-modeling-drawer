@@ -113,7 +113,7 @@ function BasicForm({
   id,
   method,
   submitTitle
-}: Props) {
+}: Readonly<Props>) {
   const { t } = useTranslation();
   const [pendingState, setPendingState] = useState(false);
   const [errors, setErrors] = useState<Array<string>>([]);

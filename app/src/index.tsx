@@ -41,7 +41,10 @@ function App(): React.JSX.Element {
   );
 }
 
-const root = createRoot(document.body);
-root.render(<App />);
+const rootElement = document.getElementById("root");
+if (rootElement) {
+  const root = createRoot(rootElement);
+  root.render(<App />);
 
-reportWebVitals(console.log);
+  reportWebVitals(console.log);
+}

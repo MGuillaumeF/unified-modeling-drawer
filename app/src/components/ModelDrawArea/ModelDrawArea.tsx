@@ -53,7 +53,7 @@ export function ModelDrawArea(): React.JSX.Element {
           <div key={diagramObject.name}>
             <h2>{diagramObject.name}</h2>
             <div onDragOver={getOnDragOver}>
-              {diagramObject.cards.map((item): JSX.Element => {
+              {diagramObject.cards.map((item: Card): JSX.Element => {
                 const classclassObjects: ClassModelObject[] = projectObject
                   ? projectObject.modelObject.classModelObjects
                   : [];

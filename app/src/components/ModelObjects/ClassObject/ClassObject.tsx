@@ -38,7 +38,7 @@ function ClassObject({
   x,
   y,
   onMove
-}: ClassObjectProps): React.JSX.Element {
+}: Readonly<ClassObjectProps>): React.JSX.Element {
   const [pos, setPos] = useState({ x: x ?? 0, y: y ?? 0 });
   const [state, setState] = useState({ x: x ?? 0, y: y ?? 0 });
 
