@@ -47,7 +47,7 @@ jobs:
         run: npm run el:package --windows
 
       - name: Archive Packages
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: UMD-distribution-win
           path: ${{github.workspace}}/dist
@@ -122,7 +122,7 @@ jobs:
         run: npm run el:package --linux
 
       - name: Archive Packages
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: UMD-distribution-linux
           path: ${{github.workspace}}/dist
@@ -156,12 +156,12 @@ jobs:
         run: ./node_modules/.bin/audiso --input-file=./dist/reports/audit-dependency-report.json --output-file ./dist/reports/audit-report.json
 
       - name: Archive Analyses reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: UMD-Analyses-report
           path: ${{github.workspace}}/dist/reports
       # - name: Coverage reports
-      #   uses: actions/upload-artifact@v2
+      #   uses: actions/upload-artifact@v4
       #   with:
       #     name: Coverage-report
       #     path: ${{github.workspace}}/coverage

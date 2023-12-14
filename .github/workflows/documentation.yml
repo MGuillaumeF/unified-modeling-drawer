@@ -43,7 +43,7 @@ jobs:
         run: md2htmlpdf manuel-utilisateur.md
 
       - name: Archive UserManual FR
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: manuel-utilisateur
           path: ${{github.workspace}}/documentation/user-manual/fr/
